@@ -99,12 +99,12 @@ const QuestionCard = forwardRef(function QuestionCard({
               onChange={(e) => handleChange(e.target.value)}
               className="mt-1 h-4 w-4 text-primary-500 focus:ring-primary-500 border-neutral-300 transition-colors duration-normal"
             />
-          <label
-            htmlFor={`${questionId}-${option.value}`}
-            className="ml-3 text-base text-neutral-700 cursor-pointer"
-          >
-            {option.label}
-          </label>
+            <label
+              htmlFor={`${questionId}-${option.value}`}
+              className="ml-3 text-base text-text-body cursor-pointer"
+            >
+              {option.label}
+            </label>
         </div>
       ))}
       {options.some(opt => opt.value === 'other' || opt.label?.toLowerCase() === 'other') && (
@@ -141,12 +141,12 @@ const QuestionCard = forwardRef(function QuestionCard({
               onChange={(e) => handleCheckboxChange(option.value, e.target.checked)}
               className="mt-1 h-4 w-4 text-primary-500 focus:ring-primary-500 border-neutral-300 rounded transition-colors duration-normal"
             />
-          <label
-            htmlFor={`${questionId}-${option.value}`}
-            className="ml-3 text-base text-neutral-700 cursor-pointer"
-          >
-            {option.label}
-          </label>
+            <label
+              htmlFor={`${questionId}-${option.value}`}
+              className="ml-3 text-base text-text-body cursor-pointer"
+            >
+              {option.label}
+            </label>
         </div>
       ))}
       {options.some(opt => opt.value === 'other' || opt.label?.toLowerCase() === 'other') && (
@@ -188,11 +188,11 @@ const QuestionCard = forwardRef(function QuestionCard({
             />
             <label
               htmlFor={`${questionId}-${rating}`}
-              className="mt-2 text-sm text-neutral-700 cursor-pointer text-center"
+              className="mt-2 text-sm text-text-body cursor-pointer text-center"
             >
               <span className="block font-medium">{rating}</span>
               {RATING_LABELS[rating] && (
-                <span className="block text-xs text-neutral-500 mt-1">
+                <span className="block text-xs text-text-secondary mt-1">
                   {RATING_LABELS[rating]}
                 </span>
               )}
@@ -201,8 +201,8 @@ const QuestionCard = forwardRef(function QuestionCard({
         ))}
       </div>
       <div className="flex items-center justify-between mt-4">
-        <span className="text-xs text-neutral-500">Mild</span>
-        <span className="text-xs text-neutral-500">Severe</span>
+        <span className="text-xs text-text-secondary">Mild</span>
+        <span className="text-xs text-text-secondary">Severe</span>
       </div>
     </fieldset>
   )
@@ -231,7 +231,7 @@ const QuestionCard = forwardRef(function QuestionCard({
           aria-describedby={currentLength > maxLength * 0.9 ? `${questionId}-char-hint` : undefined}
         />
         {currentLength > maxLength * 0.9 && (
-          <p id={`${questionId}-char-hint`} className="mt-1 text-xs text-neutral-500">
+          <p id={`${questionId}-char-hint`} className="mt-1 text-xs text-text-secondary">
             {currentLength}/{maxLength} characters
           </p>
         )}
@@ -261,7 +261,7 @@ const QuestionCard = forwardRef(function QuestionCard({
           aria-label={question}
         />
         <div className="mt-1 text-right">
-          <span className={`text-xs ${charCount >= maxChars ? 'text-warning-600' : 'text-neutral-500'}`}>
+          <span className={`text-xs ${charCount >= maxChars ? 'text-warning-600' : 'text-text-secondary'}`}>
             {charCount}/{maxChars} characters
           </span>
         </div>
@@ -292,7 +292,7 @@ const QuestionCard = forwardRef(function QuestionCard({
       <div className="mb-4">
         <label
           htmlFor={type === 'textarea' || type === 'text' ? questionId : undefined}
-          className="block text-lg font-medium text-neutral-900 mb-2"
+          className="block text-lg font-heading font-medium text-primary-500 mb-2"
         >
           {question}
         </label>

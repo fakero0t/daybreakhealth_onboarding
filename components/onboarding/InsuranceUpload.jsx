@@ -111,8 +111,8 @@ export default function InsuranceUpload() {
   const canSubmit = frontFile && backFile && !isProcessing
 
   return (
-    <main className="min-h-screen bg-neutral-50" role="main">
-      <div className="container mx-auto px-4 py-8 max-w-content">
+    <main className="min-h-screen bg-background-muted-teal" role="main">
+      <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Progress Indicator */}
         <div className="mb-8">
           <ProgressIndicator
@@ -124,10 +124,10 @@ export default function InsuranceUpload() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
             Insurance Information
           </h1>
-          <p className="text-base sm:text-lg text-neutral-700">
+          <p className="text-base sm:text-lg text-text-body">
             Let&apos;s check your insurance coverage. This will only take a moment.
           </p>
         </div>
@@ -191,7 +191,7 @@ export default function InsuranceUpload() {
 
         {/* Help Text */}
         <div className="text-center">
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-text-secondary">
             Both front and back of your insurance card are required to proceed.
           </p>
         </div>

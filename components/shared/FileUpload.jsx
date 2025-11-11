@@ -173,7 +173,7 @@ export default function FileUpload({
       {label && (
         <label
           htmlFor={fileInputRef.current?.id || `file-upload-${label}`}
-          className="block text-sm font-medium text-neutral-700 mb-2"
+          className="block text-sm font-medium text-text-body mb-2"
         >
           {label}
           {required && <span className="text-warning-500 ml-1" aria-label="required">*</span>}
@@ -209,15 +209,15 @@ export default function FileUpload({
                   }}
                 />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-neutral-700">{preview.name}</p>
-                  <p className="text-xs text-neutral-500 mt-1">
+                  <p className="text-sm font-medium text-text-body">{preview.name}</p>
+                  <p className="text-xs text-text-secondary mt-1">
                     {(preview.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleRemove}
-                  className="p-2 text-neutral-500 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
+                  className="p-2 text-text-secondary hover:text-text-body focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
                   aria-label="Remove file"
                 >
                   <XMarkIcon className="w-5 h-5" />
@@ -227,15 +227,15 @@ export default function FileUpload({
               <div className="flex items-center gap-4">
                 <DocumentIcon className="w-12 h-12 text-neutral-400" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-neutral-700">{preview.name}</p>
-                  <p className="text-xs text-neutral-500 mt-1">
+                  <p className="text-sm font-medium text-text-body">{preview.name}</p>
+                  <p className="text-xs text-text-secondary mt-1">
                     {(preview.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleRemove}
-                  className="p-2 text-neutral-500 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
+                  className="p-2 text-text-secondary hover:text-text-body focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
                   aria-label="Remove file"
                 >
                   <XMarkIcon className="w-5 h-5" />
@@ -274,10 +274,10 @@ export default function FileUpload({
           }}
         >
           <PhotoIcon className="mx-auto h-12 w-12 text-neutral-400 mb-4" />
-          <p className="text-sm font-medium text-neutral-700 mb-1">
+          <p className="text-sm font-medium text-text-body mb-1">
             Drag and drop your file here, or click to browse
           </p>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-text-secondary">
             JPEG, PNG, or PDF (max 10MB)
           </p>
           {!preview && (

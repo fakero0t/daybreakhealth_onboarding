@@ -68,6 +68,7 @@ export function OnboardingProvider({ children }) {
 
   // Load state from localStorage on mount
   useEffect(() => {
+    try {
     const savedStep = loadFromLocalStorage(STORAGE_KEYS.CURRENT_STEP, 1)
     const savedAnswers = loadFromLocalStorage(STORAGE_KEYS.SURVEY_ANSWERS, {})
     const savedInsurance = loadFromLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, false)
@@ -83,8 +84,15 @@ export function OnboardingProvider({ children }) {
     // Validate and sanitize loaded state
     const validatedState = validateState(loadedState)
     setState(validatedState)
+    } catch (error) {
+      console.error('Error initializing state:', error)
+      setState(INITIAL_STATE)
+    } finally {
+      // CRITICAL: Always set isInitialized, even if there's an error
     setIsInitialized(true)
-  }, [validateState])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Save state to localStorage whenever it changes
   useEffect(() => {

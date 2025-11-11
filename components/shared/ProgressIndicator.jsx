@@ -31,8 +31,8 @@ export default function ProgressIndicator({
     : Math.round((currentStep / totalSteps) * 100)
 
   const textColor = subtle 
-    ? 'text-neutral-500' 
-    : 'text-neutral-700'
+    ? 'text-text-secondary' 
+    : 'text-text-body'
 
   const progressBarBg = subtle
     ? 'bg-neutral-200'

@@ -35,10 +35,10 @@ const Button = forwardRef(function Button(
 ) {
   // Variant styles
   const variantStyles = {
-    primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-primary-300 disabled:cursor-not-allowed',
+    primary: 'bg-secondary-500 text-white hover:bg-secondary-600 focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 disabled:bg-secondary-300 disabled:cursor-not-allowed rounded-full',
     secondary: 'bg-secondary-500 text-white hover:bg-secondary-600 focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 disabled:bg-secondary-300 disabled:cursor-not-allowed',
-    outline: 'border-2 border-primary-500 text-primary-500 bg-transparent hover:bg-primary-50 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:border-primary-300 disabled:text-primary-300 disabled:cursor-not-allowed',
-    text: 'text-primary-500 bg-transparent hover:bg-primary-50 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:text-primary-300 disabled:cursor-not-allowed',
+    outline: 'border-2 border-secondary-500 text-secondary-500 bg-transparent hover:bg-secondary-50 focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 disabled:border-secondary-300 disabled:text-secondary-300 disabled:cursor-not-allowed',
+    text: 'text-secondary-500 bg-transparent hover:bg-secondary-50 focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 disabled:text-secondary-300 disabled:cursor-not-allowed',
   }
 
   // Size styles
@@ -49,7 +49,7 @@ const Button = forwardRef(function Button(
   }
 
   // Base styles
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98]'
+  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-normal focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98]'
 
   // Combine all styles
   const buttonClasses = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`

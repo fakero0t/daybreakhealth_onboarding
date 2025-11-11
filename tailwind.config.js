@@ -17,6 +17,9 @@ module.exports = {
       colors: {
         primary: colors.primary,
         secondary: colors.secondary,
+        accent: colors.accent,
+        background: colors.backgrounds,
+        text: colors.text,
         success: colors.success,
         informational: colors.informational,
         warning: colors.warning,

@@ -1,18 +1,25 @@
 'use client'
 
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
-import LandingPage from '@/components/onboarding/LandingPage'
-import InsuranceUpload from '@/components/onboarding/InsuranceUpload'
-import InsuranceResults from '@/components/onboarding/InsuranceResults'
-import IntakeSurvey from '@/components/onboarding/IntakeSurvey'
-import SchedulingAssistant from '@/components/onboarding/SchedulingAssistant'
+
+// Lazy load all onboarding screens for faster initial load
+const LandingPage = dynamic(() => import('@/components/onboarding/LandingPage'), {
+  loading: () => <div className="min-h-screen bg-neutral-50 flex items-center justify-center"><p className="text-neutral-600">Loading...</p></div>
+})
+
+const InsuranceUpload = dynamic(() => import('@/components/onboarding/InsuranceUpload'))
+const InsuranceResults = dynamic(() => import('@/components/onboarding/InsuranceResults'))
+const IntakeSurvey = dynamic(() => import('@/components/onboarding/IntakeSurvey'))
+const SchedulingAssistant = dynamic(() => import('@/components/onboarding/SchedulingAssistant'))
 
 /**
  * Main Onboarding Flow
  * 
  * Orchestrates the entire onboarding flow by conditionally rendering
  * screens based on the current step from OnboardingContext.
+ * Components are lazy loaded for optimal performance.
  */
 export default function Home() {
   const { currentStep, isInitialized, setCurrentStep } = useOnboardingState()

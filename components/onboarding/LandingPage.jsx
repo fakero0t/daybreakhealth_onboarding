@@ -38,8 +38,8 @@ export default function LandingPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-neutral-50" role="main">
-      <div className="container mx-auto px-4 py-8 max-w-content">
+    <main className="min-h-screen bg-background-cream" role="main">
+      <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Progress Indicator - Subtle */}
         <div className="mb-8">
           <ProgressIndicator
@@ -52,10 +52,10 @@ export default function LandingPage() {
 
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4">
+          <h1 className="text-4xl sm:text-5xl font-heading font-bold text-primary-500 mb-4">
             Welcome to Daybreak Health
           </h1>
-          <p className="text-lg sm:text-xl text-neutral-700 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-text-body max-w-2xl mx-auto">
             We&apos;re here to support you and your child every step of the way.
           </p>
         </div>
@@ -65,12 +65,12 @@ export default function LandingPage() {
           {valuePropositions.map((prop, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg p-6 shadow-sm border border-neutral-200"
+              className="bg-white rounded-lg p-6 sm:p-8 shadow-md"
             >
-              <h2 className="text-lg font-semibold text-neutral-900 mb-2">
+              <h2 className="text-lg font-heading font-semibold text-primary-500 mb-2">
                 {prop.title}
               </h2>
-              <p className="text-base text-neutral-600">
+              <p className="text-base text-text-body">
                 {prop.description}
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function LandingPage() {
 
         {/* Supporting Message */}
         <div className="text-center mb-8">
-          <p className="text-base text-neutral-700 max-w-2xl mx-auto">
+          <p className="text-base text-text-body max-w-2xl mx-auto">
             Taking the first step to support your child&apos;s mental health is important.
             Our onboarding process is designed to be simple, supportive, and respectful
             of your family&apos;s needs.
@@ -100,7 +100,7 @@ export default function LandingPage() {
 
         {/* Additional Reassurance */}
         <div className="text-center">
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-text-secondary">
             All information you provide is kept confidential and secure.
           </p>
         </div>

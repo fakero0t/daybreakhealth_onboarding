@@ -89,7 +89,7 @@ export default function FAQChatbot() {
         /* Collapsed state */
         <button
           onClick={() => setFaqOpen(true)}
-          className="flex items-center gap-2 px-4 py-3 bg-primary-500 text-white rounded-full shadow-lg hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-normal"
+          className="flex items-center gap-2 px-4 py-3 bg-secondary-500 text-white rounded-full shadow-lg hover:bg-secondary-600 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 transition-all duration-normal"
           aria-label="Open FAQ"
           aria-expanded="false"
         >
@@ -106,13 +106,13 @@ export default function FAQChatbot() {
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-neutral-200">
-            <h2 className="text-lg font-semibold text-neutral-900">Frequently Asked Questions</h2>
+            <h2 className="text-lg font-heading font-semibold text-primary-500">Frequently Asked Questions</h2>
             <button
               onClick={() => {
                 setFaqOpen(false)
                 setOpenItems(new Set())
               }}
-              className="p-1 text-neutral-500 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
+              className="p-1 text-text-secondary hover:text-text-body focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
               aria-label="Close FAQ"
             >
               <XMarkIcon className="w-5 h-5" aria-hidden="true" />
@@ -131,13 +131,13 @@ export default function FAQChatbot() {
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${item.id}`}
                   >
-                    <span className="text-sm font-medium text-neutral-900 pr-4">
+                    <span className="text-sm font-medium text-primary-500 pr-4">
                       {item.question}
                     </span>
                     {isOpen ? (
-                      <ChevronUpIcon className="w-5 h-5 text-neutral-500 flex-shrink-0" aria-hidden="true" />
+                      <ChevronUpIcon className="w-5 h-5 text-text-secondary flex-shrink-0" aria-hidden="true" />
                     ) : (
-                      <ChevronDownIcon className="w-5 h-5 text-neutral-500 flex-shrink-0" aria-hidden="true" />
+                      <ChevronDownIcon className="w-5 h-5 text-text-secondary flex-shrink-0" aria-hidden="true" />
                     )}
                   </button>
                   <div
@@ -150,7 +150,7 @@ export default function FAQChatbot() {
                     }}
                     aria-hidden={!isOpen}
                   >
-                    <div className="px-4 pb-3 text-sm text-neutral-700">
+                    <div className="px-4 pb-3 text-sm text-text-body">
                       {item.answer}
                     </div>
                   </div>

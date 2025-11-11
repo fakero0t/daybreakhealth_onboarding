@@ -47,8 +47,8 @@ export default function SchedulingAssistant() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-50" role="main">
-      <div className="container mx-auto px-4 py-8 max-w-content">
+    <main className="min-h-screen bg-background-cream" role="main">
+      <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Progress Indicator */}
         <div className="mb-8">
           <ProgressIndicator
@@ -60,29 +60,29 @@ export default function SchedulingAssistant() {
 
         {/* Congratulatory Message */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
             Congratulations!
           </h1>
-          <p className="text-base sm:text-lg text-neutral-700 mb-2">
+          <p className="text-base sm:text-lg text-text-body mb-2">
             You&apos;ve completed the onboarding process.
           </p>
-          <p className="text-base text-neutral-600">
+          <p className="text-base text-text-body">
             A care coordinator will reach out to you within 1-2 business days to discuss
             next steps and help schedule your first appointment.
           </p>
         </div>
 
         {/* Mock Calendar */}
-        <section aria-labelledby="calendar-heading" className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 mb-8">
+        <section aria-labelledby="calendar-heading" className="bg-white rounded-lg shadow-md p-6 sm:p-8 mb-8">
           <div className="flex items-center gap-2 mb-6">
             <CalendarIcon className="w-6 h-6 text-primary-500" aria-hidden="true" />
-            <h2 id="calendar-heading" className="text-xl font-semibold text-neutral-900">Schedule Your First Appointment</h2>
+            <h2 id="calendar-heading" className="text-xl font-heading font-semibold text-primary-500">Schedule Your First Appointment</h2>
           </div>
 
           <div className="space-y-4 sm:space-y-6">
             {days.map((day, dayIndex) => (
               <div key={dayIndex} className="border-b border-neutral-200 last:border-b-0 pb-4 last:pb-0">
-                <h3 className="font-medium text-neutral-900 mb-3">
+                <h3 className="font-medium text-primary-500 mb-3">
                   {formatDate(day)}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -124,8 +124,8 @@ export default function SchedulingAssistant() {
         </section>
 
         {/* Contact Information */}
-        <section aria-labelledby="contact-heading" className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 mb-8">
-          <h2 id="contact-heading" className="text-xl font-semibold text-neutral-900 mb-4">Need Help?</h2>
+        <section aria-labelledby="contact-heading" className="bg-white rounded-lg shadow-md p-6 sm:p-8 mb-8">
+          <h2 id="contact-heading" className="text-xl font-heading font-semibold text-primary-500 mb-4">Need Help?</h2>
           <div className="space-y-4">
             <a
               href="tel:5551234567"
@@ -156,7 +156,7 @@ export default function SchedulingAssistant() {
 
         {/* Confirmation Message */}
         <div className="text-center">
-          <p className="text-base text-neutral-700">
+          <p className="text-base text-text-body">
             A care coordinator will be in touch within 1-2 business days to help you schedule
             your first appointment.
           </p>

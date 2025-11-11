@@ -1,10 +1,21 @@
-import { Inter } from 'next/font/google'
+import { Poppins, Open_Sans } from 'next/font/google'
 import './globals.css'
 import { OnboardingProvider } from '@/lib/context/OnboardingContext'
 
-const inter = Inter({ 
+const poppins = Poppins({ 
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-poppins',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  preload: true,
+})
+
+const openSans = Open_Sans({ 
+  subsets: ['latin'],
+  variable: '--font-open-sans',
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  preload: true,
 })
 
 export const metadata = {
@@ -15,7 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans`}>
+      <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
         <OnboardingProvider>
           {children}
         </OnboardingProvider>

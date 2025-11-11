@@ -184,8 +184,8 @@ export default function IntakeSurvey() {
   // Introduction Screen
   if (currentScreen === 'intro') {
     return (
-      <main className="min-h-screen bg-neutral-50" role="main">
-        <div className="container mx-auto px-4 py-8 max-w-content">
+      <main className="min-h-screen bg-background-muted-teal" role="main">
+        <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
           {/* Progress Indicator */}
           <div className="mb-8">
             <ProgressIndicator
@@ -197,12 +197,12 @@ export default function IntakeSurvey() {
 
           {/* Introduction Content */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-6">
               Help Us Understand Your Child&apos;s Needs
             </h1>
 
             <div className="max-w-2xl mx-auto space-y-6 mb-8">
-              <p className="text-base sm:text-lg text-neutral-700">
+              <p className="text-base sm:text-lg text-text-body">
                 We&apos;d like to learn more about your child so we can provide the best
                 support possible. This information helps us understand your child&apos;s
                 unique needs and match you with a clinician who&apos;s a good fit.
@@ -218,11 +218,11 @@ export default function IntakeSurvey() {
               </div>
 
               <div className="space-y-4 text-left">
-                <p className="text-base text-neutral-700">
+                <p className="text-base text-text-body">
                   <strong>All questions are optional.</strong> You can skip any question
                   you prefer not to answer.
                 </p>
-                <p className="text-base text-neutral-700">
+                <p className="text-base text-text-body">
                   We encourage you to answer honestly. There are no right or wrong answers,
                   and your responses help us provide better care for your child.
                 </p>
@@ -256,8 +256,8 @@ export default function IntakeSurvey() {
     const isLastScreen = currentScreen === 9
 
     return (
-      <main className="min-h-screen bg-neutral-50" role="main">
-        <div className="container mx-auto px-4 py-8 max-w-content">
+      <main className="min-h-screen bg-background-cream" role="main">
+        <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
           {/* Progress Indicator */}
           <div className="mb-8">
             <ProgressIndicator
@@ -270,7 +270,7 @@ export default function IntakeSurvey() {
 
           {/* Auto-save indicator (visual only) */}
           <div className="text-center mb-6">
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-text-secondary">
               Your progress is being saved automatically
             </p>
           </div>
@@ -385,8 +385,8 @@ export default function IntakeSurvey() {
     }
 
     return (
-      <main className="min-h-screen bg-neutral-50" role="main">
-        <div className="container mx-auto px-4 py-8 max-w-content">
+      <main className="min-h-screen bg-background-muted-teal" role="main">
+        <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
           {/* Progress Indicator */}
           <div className="mb-8">
             <ProgressIndicator
@@ -399,10 +399,10 @@ export default function IntakeSurvey() {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
               Review Your Answers
             </h1>
-            <p className="text-base sm:text-lg text-neutral-700">
+            <p className="text-base sm:text-lg text-text-body">
               You&apos;ve answered {answeredCount} of {totalApplicable} questions
             </p>
           </div>
@@ -429,9 +429,9 @@ export default function IntakeSurvey() {
               }).length
 
               return (
-                <div key={category} className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6">
+                <div key={category} className="bg-white rounded-lg shadow-md p-6 sm:p-8">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-neutral-900">{category}</h2>
+                    <h2 className="text-xl font-heading font-semibold text-primary-500">{category}</h2>
                     <Button
                       onClick={() => handleEditCategory(category)}
                       variant="outline"
@@ -449,8 +449,8 @@ export default function IntakeSurvey() {
                       
                       return (
                         <div key={question.id} className="border-b border-neutral-100 last:border-b-0 pb-4 last:pb-0">
-                          <p className="font-medium text-neutral-900 mb-1">{question.question}</p>
-                          <p className="text-neutral-600">{formattedAnswer}</p>
+                          <p className="font-medium text-primary-500 mb-1">{question.question}</p>
+                          <p className="text-text-body">{formattedAnswer}</p>
                         </div>
                       )
                     })}
