@@ -52,11 +52,11 @@ export default function Home() {
       case 1:
         return <LandingPage />
       case 2:
-        return <InsuranceUpload />
-      case 3:
-        return <InsuranceResults />
-      case 4:
         return <IntakeSurvey />
+      case 3:
+        return <InsuranceUpload />
+      case 4:
+        return <InsuranceResults />
       case 5:
         return <SchedulingAssistant />
       default:

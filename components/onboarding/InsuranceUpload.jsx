@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import FileUpload from '@/components/shared/FileUpload'
@@ -14,7 +15,7 @@ import FAQChatbot from '@/components/shared/FAQChatbot'
  * Screen for uploading front and back of insurance card with validation and processing.
  */
 export default function InsuranceUpload() {
-  const { goToNextStep } = useStepNavigation()
+  const { goToNextStep, goToPreviousStep, canGoPrevious } = useStepNavigation()
   const { setInsuranceUploaded } = useOnboardingState()
   const [frontFile, setFrontFile] = useState(null)
   const [backFile, setBackFile] = useState(null)
@@ -113,12 +114,28 @@ export default function InsuranceUpload() {
   return (
     <main className="min-h-screen bg-background-muted-teal" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
+        {/* Back Button */}
+        {canGoPrevious && (
+          <div className="mb-6">
+            <Button
+              onClick={goToPreviousStep}
+              variant="text"
+              size="medium"
+              ariaLabel="Go back to previous step"
+              className="flex items-center gap-2"
+            >
+              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
+              Back
+            </Button>
+          </div>
+        )}
+
         {/* Progress Indicator */}
         <div className="mb-8">
           <ProgressIndicator
-            currentStep={2}
+            currentStep={3}
             totalSteps={5}
-            percentage={40}
+            percentage={60}
           />
         </div>
 

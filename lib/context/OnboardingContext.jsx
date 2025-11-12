@@ -3,15 +3,18 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { 
   saveToLocalStorage, 
-  loadFromLocalStorage 
+  loadFromLocalStorage,
+  removeFromLocalStorage
 } from '../utils/localStorage'
+import { getAllSymptomKeys } from '../constants/symptom-mapping'
 
 /**
  * OnboardingContext
  * 
  * Manages global state for the onboarding flow including:
  * - Current step (1-5)
- * - Survey answers
+ * - Extracted symptoms (UI-only, not persisted to backend)
+ * - Extraction metadata
  * - Insurance upload status
  * - FAQ open/closed state
  */
@@ -20,14 +23,16 @@ const OnboardingContext = createContext(undefined)
 
 const STORAGE_KEYS = {
   CURRENT_STEP: 'current_step',
-  SURVEY_ANSWERS: 'survey_answers',
+  EXTRACTED_SYMPTOMS: 'extracted_symptoms',
+  EXTRACTION_METADATA: 'extraction_metadata',
   INSURANCE_UPLOADED: 'insurance_uploaded',
   FAQ_OPEN: 'faq_open',
 }
 
 const INITIAL_STATE = {
   currentStep: 1,
-  surveyAnswers: {},
+  extractedSymptoms: {},
+  extractionMetadata: { extractedAt: null, model: null },
   insuranceUploaded: false,
   faqOpen: false,
 }
@@ -43,10 +48,42 @@ export function OnboardingProvider({ children }) {
       ? state.currentStep
       : 1
 
-    // Validate surveyAnswers (must be object)
-    const answers = typeof state.surveyAnswers === 'object' && state.surveyAnswers !== null && !Array.isArray(state.surveyAnswers)
-      ? state.surveyAnswers
-      : {}
+    // Validate extractedSymptoms (must be object with valid symptom keys and values)
+    let symptoms = {}
+    if (typeof state.extractedSymptoms === 'object' && state.extractedSymptoms !== null && !Array.isArray(state.extractedSymptoms)) {
+      const allowedValues = ['Daily', 'Some', 'None', '']
+      const expectedKeys = getAllSymptomKeys()
+      
+      // Validate each symptom value
+      for (const key of expectedKeys) {
+        const value = state.extractedSymptoms[key]
+        if (value === undefined || value === null || allowedValues.includes(value)) {
+          symptoms[key] = value || ''
+        } else {
+          // Invalid value, use empty string
+          symptoms[key] = ''
+        }
+      }
+      
+      // Remove any unexpected keys
+      const cleanedSymptoms = {}
+      for (const key of expectedKeys) {
+        cleanedSymptoms[key] = symptoms[key] || ''
+      }
+      symptoms = cleanedSymptoms
+    }
+
+    // Validate extractionMetadata (must be object with extractedAt and model)
+    const metadata = typeof state.extractionMetadata === 'object' && state.extractionMetadata !== null && !Array.isArray(state.extractionMetadata)
+      ? {
+          extractedAt: typeof state.extractionMetadata.extractedAt === 'number' || state.extractionMetadata.extractedAt === null
+            ? state.extractionMetadata.extractedAt
+            : null,
+          model: typeof state.extractionMetadata.model === 'string' || state.extractionMetadata.model === null
+            ? state.extractionMetadata.model
+            : null,
+        }
+      : { extractedAt: null, model: null }
 
     // Validate insuranceUploaded (must be boolean)
     const insurance = typeof state.insuranceUploaded === 'boolean'
@@ -60,7 +97,8 @@ export function OnboardingProvider({ children }) {
 
     return {
       currentStep: step,
-      surveyAnswers: answers,
+      extractedSymptoms: symptoms,
+      extractionMetadata: metadata,
       insuranceUploaded: insurance,
       faqOpen: faq,
     }
@@ -69,27 +107,52 @@ export function OnboardingProvider({ children }) {
   // Load state from localStorage on mount
   useEffect(() => {
     try {
-    const savedStep = loadFromLocalStorage(STORAGE_KEYS.CURRENT_STEP, 1)
-    const savedAnswers = loadFromLocalStorage(STORAGE_KEYS.SURVEY_ANSWERS, {})
-    const savedInsurance = loadFromLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, false)
-    const savedFaq = loadFromLocalStorage(STORAGE_KEYS.FAQ_OPEN, false)
+      // Check URL step parameter first (takes precedence over localStorage)
+      let initialStep = 1
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search)
+        const stepFromUrl = parseInt(urlParams.get('step') || '0', 10)
+        if (stepFromUrl >= 1 && stepFromUrl <= 5) {
+          initialStep = stepFromUrl
+        }
+      }
+      
+      const savedStep = loadFromLocalStorage(STORAGE_KEYS.CURRENT_STEP, 1)
+      const savedSymptoms = loadFromLocalStorage(STORAGE_KEYS.EXTRACTED_SYMPTOMS, {})
+      const savedMetadata = loadFromLocalStorage(STORAGE_KEYS.EXTRACTION_METADATA, { extractedAt: null, model: null })
+      const savedInsurance = loadFromLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, false)
+      const savedFaq = loadFromLocalStorage(STORAGE_KEYS.FAQ_OPEN, false)
 
-    const loadedState = {
-      currentStep: savedStep,
-      surveyAnswers: savedAnswers,
-      insuranceUploaded: savedInsurance,
-      faqOpen: savedFaq,
-    }
+      // One-time migration: Clear old surveyAnswers if it exists
+      const oldSurveyAnswers = loadFromLocalStorage('survey_answers', null)
+      if (oldSurveyAnswers !== null) {
+        try {
+          removeFromLocalStorage('survey_answers')
+        } catch (migrationError) {
+          console.warn('Error during migration from surveyAnswers:', migrationError)
+        }
+      }
 
-    // Validate and sanitize loaded state
-    const validatedState = validateState(loadedState)
-    setState(validatedState)
+      // Use URL step if valid, otherwise use saved step
+      const finalStep = (initialStep >= 1 && initialStep <= 5) ? initialStep : savedStep
+
+      const loadedState = {
+        currentStep: finalStep,
+        extractedSymptoms: savedSymptoms,
+        extractionMetadata: savedMetadata,
+        insuranceUploaded: savedInsurance,
+        faqOpen: savedFaq,
+      }
+
+      // Validate and sanitize loaded state
+      const validatedState = validateState(loadedState)
+      setState(validatedState)
     } catch (error) {
       console.error('Error initializing state:', error)
       setState(INITIAL_STATE)
     } finally {
       // CRITICAL: Always set isInitialized, even if there's an error
-    setIsInitialized(true)
+      setIsInitialized(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -98,10 +161,44 @@ export function OnboardingProvider({ children }) {
   useEffect(() => {
     if (!isInitialized) return
 
-    saveToLocalStorage(STORAGE_KEYS.CURRENT_STEP, state.currentStep)
-    saveToLocalStorage(STORAGE_KEYS.SURVEY_ANSWERS, state.surveyAnswers)
-    saveToLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, state.insuranceUploaded)
-    saveToLocalStorage(STORAGE_KEYS.FAQ_OPEN, state.faqOpen)
+    try {
+      const saved = saveToLocalStorage(STORAGE_KEYS.CURRENT_STEP, state.currentStep)
+      if (!saved) {
+        console.warn('Unable to save currentStep to localStorage. Continuing with in-memory storage only.')
+      }
+    } catch (error) {
+      console.warn('Error saving currentStep to localStorage:', error)
+    }
+
+    try {
+      const saved = saveToLocalStorage(STORAGE_KEYS.EXTRACTED_SYMPTOMS, state.extractedSymptoms)
+      if (!saved) {
+        console.warn('Unable to save extractedSymptoms to localStorage. Continuing with in-memory storage only.')
+      }
+    } catch (error) {
+      console.warn('Error saving extractedSymptoms to localStorage:', error)
+    }
+
+    try {
+      const saved = saveToLocalStorage(STORAGE_KEYS.EXTRACTION_METADATA, state.extractionMetadata)
+      if (!saved) {
+        console.warn('Unable to save extractionMetadata to localStorage. Continuing with in-memory storage only.')
+      }
+    } catch (error) {
+      console.warn('Error saving extractionMetadata to localStorage:', error)
+    }
+
+    try {
+      saveToLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, state.insuranceUploaded)
+    } catch (error) {
+      console.warn('Error saving insuranceUploaded to localStorage:', error)
+    }
+
+    try {
+      saveToLocalStorage(STORAGE_KEYS.FAQ_OPEN, state.faqOpen)
+    } catch (error) {
+      console.warn('Error saving faqOpen to localStorage:', error)
+    }
   }, [state, isInitialized])
 
   // Update current step
@@ -125,37 +222,61 @@ export function OnboardingProvider({ children }) {
     }
   }, [])
 
-  // Update survey answer
-  const setSurveyAnswer = useCallback((questionId, answer) => {
-    // Validate questionId is a string
-    if (typeof questionId !== 'string' || questionId.length === 0) {
-      console.warn('Invalid questionId provided to setSurveyAnswer')
+  // Update extracted symptoms object
+  const setExtractedSymptoms = useCallback((symptoms) => {
+    // Validate symptoms is an object
+    if (typeof symptoms !== 'object' || symptoms === null || Array.isArray(symptoms)) {
+      console.warn('Invalid symptoms object provided to setExtractedSymptoms')
       return
-    }
-
-    // Sanitize answer - allow null, undefined, string, number, boolean, or array
-    // but ensure arrays contain only valid values
-    let sanitizedAnswer = answer
-    if (Array.isArray(answer)) {
-      sanitizedAnswer = answer.filter(item => item !== null && item !== undefined)
     }
 
     setState(prev => ({
       ...prev,
-      surveyAnswers: {
-        ...prev.surveyAnswers,
-        [questionId]: sanitizedAnswer,
+      extractedSymptoms: symptoms,
+    }))
+  }, [])
+
+  // Update individual extracted symptom
+  const setExtractedSymptom = useCallback((symptomKey, value) => {
+    // Validate symptomKey is a string
+    if (typeof symptomKey !== 'string' || symptomKey.length === 0) {
+      console.warn('Invalid symptomKey provided to setExtractedSymptom')
+      return
+    }
+
+    // Validate value is one of the allowed values or empty string
+    const allowedValues = ['Daily', 'Some', 'None', '']
+    if (value !== null && value !== undefined && !allowedValues.includes(value)) {
+      console.warn(`Invalid symptom value provided: ${value}. Allowed values: Daily, Some, None, or empty string.`)
+      return
+    }
+
+    setState(prev => ({
+      ...prev,
+      extractedSymptoms: {
+        ...prev.extractedSymptoms,
+        [symptomKey]: value || '',
       },
     }))
   }, [])
 
-  // Update multiple survey answers at once
-  const setSurveyAnswers = useCallback((answers) => {
+  // Update extraction metadata
+  const setExtractionMetadata = useCallback((metadata) => {
+    // Validate metadata is an object
+    if (typeof metadata !== 'object' || metadata === null || Array.isArray(metadata)) {
+      console.warn('Invalid metadata object provided to setExtractionMetadata')
+      return
+    }
+
     setState(prev => ({
       ...prev,
-      surveyAnswers: {
-        ...prev.surveyAnswers,
-        ...answers,
+      extractionMetadata: {
+        extractedAt: typeof metadata.extractedAt === 'number' || metadata.extractedAt === null
+          ? metadata.extractedAt
+          : prev.extractionMetadata.extractedAt,
+        model: typeof metadata.model === 'string' || metadata.model === null
+          ? metadata.model
+          : prev.extractionMetadata.model,
       },
     }))
   }, [])
@@ -210,8 +331,9 @@ export function OnboardingProvider({ children }) {
   const value = {
     ...state,
     setCurrentStep,
-    setSurveyAnswer,
-    setSurveyAnswers,
+    setExtractedSymptoms,
+    setExtractedSymptom,
+    setExtractionMetadata,
     setInsuranceUploaded,
     setFaqOpen,
     isInitialized,

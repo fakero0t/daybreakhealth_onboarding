@@ -1,6 +1,8 @@
 'use client'
 
-import { CalendarIcon, PhoneIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
+import { CalendarIcon, PhoneIcon, EnvelopeIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
+import Button from '@/components/shared/Button'
 import ProgressIndicator from '@/components/shared/ProgressIndicator'
 import FAQChatbot from '@/components/shared/FAQChatbot'
 
@@ -10,6 +12,8 @@ import FAQChatbot from '@/components/shared/FAQChatbot'
  * Final scheduling page with mock calendar and contact information.
  */
 export default function SchedulingAssistant() {
+  const { goToPreviousStep, canGoPrevious } = useStepNavigation()
+
   // Generate next 7 days
   const getNext7Days = () => {
     const days = []
@@ -49,6 +53,22 @@ export default function SchedulingAssistant() {
   return (
     <main className="min-h-screen bg-background-cream" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
+        {/* Back Button */}
+        {canGoPrevious && (
+          <div className="mb-6">
+            <Button
+              onClick={goToPreviousStep}
+              variant="text"
+              size="medium"
+              ariaLabel="Go back to previous step"
+              className="flex items-center gap-2"
+            >
+              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
+              Back
+            </Button>
+          </div>
+        )}
+
         {/* Progress Indicator */}
         <div className="mb-8">
           <ProgressIndicator

@@ -1,6 +1,7 @@
 'use client'
 
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import Button from '@/components/shared/Button'
 import ProgressIndicator from '@/components/shared/ProgressIndicator'
@@ -13,7 +14,7 @@ import FAQChatbot from '@/components/shared/FAQChatbot'
  * Always shows approved outcome.
  */
 export default function InsuranceResults() {
-  const { goToNextStep } = useStepNavigation()
+  const { goToNextStep, goToPreviousStep, canGoPrevious } = useStepNavigation()
 
   const handleContinue = () => {
     goToNextStep()
@@ -22,12 +23,28 @@ export default function InsuranceResults() {
   return (
     <main className="min-h-screen bg-background-cream" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
+        {/* Back Button */}
+        {canGoPrevious && (
+          <div className="mb-6">
+            <Button
+              onClick={goToPreviousStep}
+              variant="text"
+              size="medium"
+              ariaLabel="Go back to previous step"
+              className="flex items-center gap-2"
+            >
+              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
+              Back
+            </Button>
+          </div>
+        )}
+
         {/* Progress Indicator */}
         <div className="mb-8">
           <ProgressIndicator
-            currentStep={3}
+            currentStep={4}
             totalSteps={5}
-            percentage={60}
+            percentage={80}
           />
         </div>
 
