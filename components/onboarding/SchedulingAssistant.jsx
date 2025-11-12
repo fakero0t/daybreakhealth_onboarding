@@ -1,54 +1,165 @@
 'use client'
 
-import { CalendarIcon, PhoneIcon, EnvelopeIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect } from 'react'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
+import { useOnboardingState } from '@/lib/context/OnboardingContext'
+import { detectUserTimezone } from '@/lib/utils/timezone-utils'
 import Button from '@/components/shared/Button'
 import ProgressIndicator from '@/components/shared/ProgressIndicator'
 import FAQChatbot from '@/components/shared/FAQChatbot'
+import NaturalLanguageScheduling from './NaturalLanguageScheduling'
+import AvailabilityResults from './AvailabilityResults'
+import SchedulingConfirmation from './SchedulingConfirmation'
+
+// Flow phases (moved outside component to avoid recreation on each render)
+const PHASES = {
+  INPUT: 'input',
+  INTERPRETING: 'interpreting',
+  MATCHING: 'matching',
+  RESULTS: 'results',
+  CONFIRMATION: 'confirmation',
+}
 
 /**
  * SchedulingAssistant Component
  * 
- * Final scheduling page with mock calendar and contact information.
+ * Natural language scheduling interface with AI-powered interpretation and matching.
  */
 export default function SchedulingAssistant() {
   const { goToPreviousStep, canGoPrevious } = useStepNavigation()
+  const {
+    schedulingInput,
+    interpretedPreferences,
+    matchedSlots,
+    selectedSlot,
+    setSchedulingInput,
+    setInterpretedPreferences,
+    setMatchedSlots,
+    setSelectedSlot,
+    isInitialized,
+  } = useOnboardingState()
 
-  // Generate next 7 days
-  const getNext7Days = () => {
-    const days = []
-    const today = new Date()
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() + i)
-      days.push(date)
+  const [phase, setPhase] = useState(PHASES.INPUT)
+  const [userTimezone, setUserTimezone] = useState('America/Los_Angeles')
+  const [error, setError] = useState(null)
+  const [isConfirmed, setIsConfirmed] = useState(false)
+
+  // Initialize phase based on context state
+  useEffect(() => {
+    if (!isInitialized) return
+
+    // Restore phase based on context state
+    if (selectedSlot) {
+      setPhase(PHASES.CONFIRMATION)
+    } else if (matchedSlots && matchedSlots.length > 0) {
+      setPhase(PHASES.RESULTS)
+    } else if (schedulingInput) {
+      setPhase(PHASES.INPUT)
     }
-    return days
-  }
+  }, [isInitialized, selectedSlot, matchedSlots, schedulingInput])
 
-  const days = getNext7Days()
-  const timeSlots = ['9:00 AM', '11:00 AM', '2:00 PM', '4:00 PM']
+  // Detect user timezone on mount
+  useEffect(() => {
+    const detectedTimezone = detectUserTimezone()
+    setUserTimezone(detectedTimezone)
+  }, [])
 
-  // Format date for display
-  const formatDate = (date) => {
-    const today = new Date()
-    const tomorrow = new Date(today)
-    tomorrow.setDate(today.getDate() + 1)
-    
-    if (date.toDateString() === today.toDateString()) {
-      return 'Today'
-    } else if (date.toDateString() === tomorrow.toDateString()) {
-      return 'Tomorrow'
+  // Handle form submit
+  const handleSubmit = async (input) => {
+    setSchedulingInput(input)
+    setError(null)
+    setPhase(PHASES.INTERPRETING)
+
+    try {
+      // Step 1: Interpret scheduling preferences
+      const interpretResponse = await fetch('/api/interpret-scheduling', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userInput: input,
+          userTimezone: userTimezone,
+        }),
+      })
+
+      const interpretData = await interpretResponse.json()
+
+      if (!interpretData.success) {
+        throw new Error(interpretData.error || 'Failed to interpret availability')
+      }
+
+      setInterpretedPreferences(interpretData.interpretedPreferences)
+
+      // Step 2: Match availability
+      setPhase(PHASES.MATCHING)
+
+      const matchResponse = await fetch('/api/match-availability', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          interpretedPreferences: interpretData.interpretedPreferences,
+          organizationId: 85685,
+        }),
+      })
+
+      const matchData = await matchResponse.json()
+
+      if (!matchData.success) {
+        throw new Error(matchData.error || 'Failed to match availability')
+      }
+
+      // Success - show results
+      setMatchedSlots(matchData.matchedSlots || [])
+      setPhase(PHASES.RESULTS)
+    } catch (err) {
+      console.error('Scheduling error:', err)
+
+      // Handle different error types
+      if (err.message.includes('Connection') || err.message.includes('network')) {
+        setError('Connection error. Please check your internet and try again.')
+      } else if (err.message.includes('understanding') || err.message.includes('interpret')) {
+        setError('We\'re having trouble understanding your availability. Please try rephrasing or contact us for help.')
     } else {
-      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+        setError(err.message || 'An error occurred. Please try again.')
+      }
+
+      setPhase(PHASES.INPUT)
     }
   }
 
-  // Mock availability (some slots available, some not)
-  const isSlotAvailable = (dayIndex, slotIndex) => {
-    // Simple mock logic - make some slots available
-    return (dayIndex + slotIndex) % 3 !== 0
+  // Handle slot selection
+  const handleSelectSlot = (slot) => {
+    setSelectedSlot(slot)
+    setPhase(PHASES.CONFIRMATION)
   }
+
+  // Handle confirmation
+  const handleConfirm = () => {
+    // Show success message
+    // Note: No actual appointment booking - just storing preference
+    setIsConfirmed(true)
+    // TODO: Navigate to completion/confirmation screen in final onboarding step
+  }
+
+  // Handle try again
+  const handleTryAgain = () => {
+    setPhase(PHASES.INPUT)
+    setError(null)
+    setMatchedSlots([])
+    setSelectedSlot(null)
+  }
+
+  // Handle back from confirmation
+  const handleBackFromConfirmation = () => {
+    setPhase(PHASES.RESULTS)
+  }
+
+  // Determine if loading
+  const isLoading = phase === PHASES.INTERPRETING || phase === PHASES.MATCHING
 
   return (
     <main className="min-h-screen bg-background-cream" role="main">
@@ -78,109 +189,95 @@ export default function SchedulingAssistant() {
           />
         </div>
 
-        {/* Congratulatory Message */}
+        {/* Page Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
-            Congratulations!
+            Schedule Your First Appointment
           </h1>
-          <p className="text-base sm:text-lg text-text-body mb-2">
-            You&apos;ve completed the onboarding process.
-          </p>
-          <p className="text-base text-text-body">
-            A care coordinator will reach out to you within 1-2 business days to discuss
-            next steps and help schedule your first appointment.
+          <p className="text-base sm:text-lg text-text-body">
+            Tell us when you&apos;re available, and we&apos;ll find the best appointment times for you.
           </p>
         </div>
 
-        {/* Mock Calendar */}
-        <section aria-labelledby="calendar-heading" className="bg-white rounded-lg shadow-md p-6 sm:p-8 mb-8">
-          <div className="flex items-center gap-2 mb-6">
-            <CalendarIcon className="w-6 h-6 text-primary-500" aria-hidden="true" />
-            <h2 id="calendar-heading" className="text-xl font-heading font-semibold text-primary-500">Schedule Your First Appointment</h2>
-          </div>
+        {/* Main Content */}
+        <section
+          aria-labelledby="scheduling-heading"
+          className="bg-white rounded-lg shadow-md p-6 sm:p-8 mb-8"
+        >
+          <h2 id="scheduling-heading" className="sr-only">
+            Schedule Appointment
+          </h2>
 
-          <div className="space-y-4 sm:space-y-6">
-            {days.map((day, dayIndex) => (
-              <div key={dayIndex} className="border-b border-neutral-200 last:border-b-0 pb-4 last:pb-0">
-                <h3 className="font-medium text-primary-500 mb-3">
-                  {formatDate(day)}
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {timeSlots.map((slot, slotIndex) => {
-                    const available = isSlotAvailable(dayIndex, slotIndex)
-                    return (
-                      <button
-                        key={slotIndex}
-                        type="button"
-                        disabled
-                        className={`
-                          px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                          ${available
-                            ? 'bg-primary-50 text-primary-700 border border-primary-200 cursor-default'
-                            : 'bg-neutral-100 text-neutral-400 border border-neutral-200 cursor-not-allowed'
-                          }
-                        `}
-                        aria-label={`${slot} on ${formatDate(day)} - ${available ? 'Available' : 'Unavailable'}`}
-                      >
-                        {slot}
-                      </button>
-                    )
-                  })}
+          {phase === PHASES.INPUT && (
+            <NaturalLanguageScheduling
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+              error={error}
+            />
+          )}
+
+          {phase === PHASES.INTERPRETING && (
+            <div className="text-center py-12" role="status" aria-live="polite">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
+              <p className="text-base text-text-body">
+                Understanding your availability...
+              </p>
                 </div>
+          )}
+
+          {phase === PHASES.MATCHING && (
+            <div className="text-center py-12" role="status" aria-live="polite">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
+              <p className="text-base text-text-body">
+                Finding available appointments...
+              </p>
               </div>
-            ))}
-          </div>
+          )}
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              disabled
-              className="px-6 py-3 bg-neutral-200 text-neutral-500 rounded-lg font-medium cursor-not-allowed"
-              aria-label="Schedule appointment (non-functional)"
+          {phase === PHASES.RESULTS && (
+            <AvailabilityResults
+              slots={matchedSlots}
+              onSelectSlot={handleSelectSlot}
+              onTryAgain={handleTryAgain}
+            />
+          )}
+
+          {phase === PHASES.CONFIRMATION && selectedSlot && !isConfirmed && (
+            <SchedulingConfirmation
+              selectedSlot={selectedSlot}
+              onConfirm={handleConfirm}
+              onBack={handleBackFromConfirmation}
+            />
+          )}
+
+          {phase === PHASES.CONFIRMATION && isConfirmed && (
+            <div
+              className="bg-success-50 border-2 border-success-200 rounded-lg p-6"
+              role="alert"
+              aria-live="polite"
             >
-              Schedule Your First Appointment
-            </button>
+              <p className="text-base text-success-800 text-center">
+                Your preference has been saved. A care coordinator will reach out to you within 1-2 business days.
+              </p>
           </div>
+          )}
         </section>
 
-        {/* Contact Information */}
-        <section aria-labelledby="contact-heading" className="bg-white rounded-lg shadow-md p-6 sm:p-8 mb-8">
-          <h2 id="contact-heading" className="text-xl font-heading font-semibold text-primary-500 mb-4">Need Help?</h2>
-          <div className="space-y-4">
-            <a
-              href="tel:5551234567"
-              className="flex items-center gap-3 text-primary-600 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded p-2"
-            >
-              <PhoneIcon className="w-5 h-5" aria-hidden="true" />
-              <span className="font-medium">Call us: (555) 123-4567</span>
-            </a>
-            <a
-              href="mailto:support@daybreakhealth.com"
-              className="flex items-center gap-3 text-primary-600 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded p-2"
-            >
-              <EnvelopeIcon className="w-5 h-5" aria-hidden="true" />
-              <span className="font-medium">Email us: support@daybreakhealth.com</span>
-            </a>
-          </div>
-        </section>
-
-        {/* First Session Information */}
-        <section aria-labelledby="first-session-heading" className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
-          <h2 id="first-session-heading" className="text-lg font-semibold text-primary-900 mb-3">What to Expect in Your First Session</h2>
-          <p className="text-base text-primary-800">
-            Your first session will be an opportunity to meet your clinician, discuss your
-            child&apos;s goals, and create a personalized treatment plan. This is a safe space
-            to ask questions and share what&apos;s on your mind.
+        {/* Help Section */}
+        <section aria-labelledby="help-heading" className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
+          <h2 id="help-heading" className="text-lg font-semibold text-primary-900 mb-3">
+            Need Help?
+          </h2>
+          <p className="text-base text-primary-800 mb-4">
+            You can describe your availability in any way that works for you. For example:
           </p>
+          <ul className="list-disc list-inside text-base text-primary-800 space-y-2">
+            <li>&quot;I&apos;m only free on weekdays after 5pm&quot;</li>
+            <li>&quot;I can do an appointment between 9am and 11am next Tuesday and Thursday&quot;</li>
+            <li>&quot;Weekends in the morning&quot;</li>
+            <li>&quot;Next week, any day after 2pm&quot;</li>
+          </ul>
         </section>
-
-        {/* Confirmation Message */}
-        <div className="text-center">
-          <p className="text-base text-text-body">
-            A care coordinator will be in touch within 1-2 business days to help you schedule
-            your first appointment.
-          </p>
-        </div>
       </div>
 
       {/* FAQ Chatbot */}
@@ -188,4 +285,3 @@ export default function SchedulingAssistant() {
     </main>
   )
 }
-

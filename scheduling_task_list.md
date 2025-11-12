@@ -217,10 +217,10 @@ Implement OpenAI API integration to interpret natural language scheduling prefer
 
 #### Files to Modify:
 1. **`package.json`**
-   - Add dependency: `openai` (OpenAI SDK)
+   - Note: `openai` package is already installed in the project
 
 2. **`.env.example`** (if exists, or create)
-   - Add: `OPENAI_API_KEY=your_openai_api_key_here`
+   - Note: `OPENAI_API_KEY` is already configured in the project
 
 ### Implementation Details
 
@@ -904,6 +904,7 @@ Integrate scheduling state into OnboardingContext, implement localStorage persis
 
 #### Files to Modify:
 1. **`lib/context/OnboardingContext.jsx`**
+   - Note: File already exists in the project
    - Add scheduling state:
      ```javascript
      {
@@ -924,7 +925,8 @@ Integrate scheduling state into OnboardingContext, implement localStorage persis
    - Note: Selected slot is stored in context/localStorage only - no database records created
    - Note: This is part of the existing onboarding flow (Step 5/6)
 
-2. **`lib/utils/localStorage.js`** (if exists, or create)
+2. **`lib/utils/localStorage.js`**
+   - Note: File already exists in the project with utility functions
    - Add functions to persist/restore scheduling state:
      - `saveSchedulingState(state)`
      - `getSchedulingState()`

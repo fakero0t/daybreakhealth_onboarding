@@ -27,6 +27,10 @@ const STORAGE_KEYS = {
   EXTRACTION_METADATA: 'extraction_metadata',
   INSURANCE_UPLOADED: 'insurance_uploaded',
   FAQ_OPEN: 'faq_open',
+  SCHEDULING_INPUT: 'scheduling_input',
+  INTERPRETED_PREFERENCES: 'interpreted_preferences',
+  MATCHED_SLOTS: 'matched_slots',
+  SELECTED_SLOT: 'selected_slot',
 }
 
 const INITIAL_STATE = {
@@ -35,6 +39,10 @@ const INITIAL_STATE = {
   extractionMetadata: { extractedAt: null, model: null },
   insuranceUploaded: false,
   faqOpen: false,
+  schedulingInput: '',
+  interpretedPreferences: null,
+  matchedSlots: [],
+  selectedSlot: null,
 }
 
 export function OnboardingProvider({ children }) {
@@ -95,12 +103,38 @@ export function OnboardingProvider({ children }) {
       ? state.faqOpen
       : false
 
+    // Validate schedulingInput (must be string)
+    const schedulingInput = typeof state.schedulingInput === 'string'
+      ? state.schedulingInput
+      : ''
+
+    // Validate interpretedPreferences (must be object or null)
+    const interpretedPreferences = (state.interpretedPreferences === null || 
+      (typeof state.interpretedPreferences === 'object' && !Array.isArray(state.interpretedPreferences)))
+      ? state.interpretedPreferences
+      : null
+
+    // Validate matchedSlots (must be array)
+    const matchedSlots = Array.isArray(state.matchedSlots)
+      ? state.matchedSlots
+      : []
+
+    // Validate selectedSlot (must be object or null)
+    const selectedSlot = (state.selectedSlot === null || 
+      (typeof state.selectedSlot === 'object' && !Array.isArray(state.selectedSlot)))
+      ? state.selectedSlot
+      : null
+
     return {
       currentStep: step,
       extractedSymptoms: symptoms,
       extractionMetadata: metadata,
       insuranceUploaded: insurance,
       faqOpen: faq,
+      schedulingInput,
+      interpretedPreferences,
+      matchedSlots,
+      selectedSlot,
     }
   }, [])
 
@@ -122,6 +156,10 @@ export function OnboardingProvider({ children }) {
       const savedMetadata = loadFromLocalStorage(STORAGE_KEYS.EXTRACTION_METADATA, { extractedAt: null, model: null })
       const savedInsurance = loadFromLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, false)
       const savedFaq = loadFromLocalStorage(STORAGE_KEYS.FAQ_OPEN, false)
+      const savedSchedulingInput = loadFromLocalStorage(STORAGE_KEYS.SCHEDULING_INPUT, '')
+      const savedInterpretedPreferences = loadFromLocalStorage(STORAGE_KEYS.INTERPRETED_PREFERENCES, null)
+      const savedMatchedSlots = loadFromLocalStorage(STORAGE_KEYS.MATCHED_SLOTS, [])
+      const savedSelectedSlot = loadFromLocalStorage(STORAGE_KEYS.SELECTED_SLOT, null)
 
       // One-time migration: Clear old surveyAnswers if it exists
       const oldSurveyAnswers = loadFromLocalStorage('survey_answers', null)
@@ -142,6 +180,10 @@ export function OnboardingProvider({ children }) {
         extractionMetadata: savedMetadata,
         insuranceUploaded: savedInsurance,
         faqOpen: savedFaq,
+        schedulingInput: savedSchedulingInput,
+        interpretedPreferences: savedInterpretedPreferences,
+        matchedSlots: savedMatchedSlots,
+        selectedSlot: savedSelectedSlot,
       }
 
       // Validate and sanitize loaded state
@@ -198,6 +240,30 @@ export function OnboardingProvider({ children }) {
       saveToLocalStorage(STORAGE_KEYS.FAQ_OPEN, state.faqOpen)
     } catch (error) {
       console.warn('Error saving faqOpen to localStorage:', error)
+    }
+
+    try {
+      saveToLocalStorage(STORAGE_KEYS.SCHEDULING_INPUT, state.schedulingInput)
+    } catch (error) {
+      console.warn('Error saving schedulingInput to localStorage:', error)
+    }
+
+    try {
+      saveToLocalStorage(STORAGE_KEYS.INTERPRETED_PREFERENCES, state.interpretedPreferences)
+    } catch (error) {
+      console.warn('Error saving interpretedPreferences to localStorage:', error)
+    }
+
+    try {
+      saveToLocalStorage(STORAGE_KEYS.MATCHED_SLOTS, state.matchedSlots)
+    } catch (error) {
+      console.warn('Error saving matchedSlots to localStorage:', error)
+    }
+
+    try {
+      saveToLocalStorage(STORAGE_KEYS.SELECTED_SLOT, state.selectedSlot)
+    } catch (error) {
+      console.warn('Error saving selectedSlot to localStorage:', error)
     }
   }, [state, isInitialized])
 
@@ -291,6 +357,42 @@ export function OnboardingProvider({ children }) {
     setState(prev => ({ ...prev, faqOpen: open }))
   }, [])
 
+  // Update scheduling input
+  const setSchedulingInput = useCallback((input) => {
+    if (typeof input !== 'string') {
+      console.warn('Invalid schedulingInput provided to setSchedulingInput')
+      return
+    }
+    setState(prev => ({ ...prev, schedulingInput: input }))
+  }, [])
+
+  // Update interpreted preferences
+  const setInterpretedPreferences = useCallback((preferences) => {
+    if (preferences !== null && (typeof preferences !== 'object' || Array.isArray(preferences))) {
+      console.warn('Invalid interpretedPreferences provided to setInterpretedPreferences')
+      return
+    }
+    setState(prev => ({ ...prev, interpretedPreferences: preferences }))
+  }, [])
+
+  // Update matched slots
+  const setMatchedSlots = useCallback((slots) => {
+    if (!Array.isArray(slots)) {
+      console.warn('Invalid matchedSlots provided to setMatchedSlots')
+      return
+    }
+    setState(prev => ({ ...prev, matchedSlots: slots }))
+  }, [])
+
+  // Update selected slot
+  const setSelectedSlot = useCallback((slot) => {
+    if (slot !== null && (typeof slot !== 'object' || Array.isArray(slot))) {
+      console.warn('Invalid selectedSlot provided to setSelectedSlot')
+      return
+    }
+    setState(prev => ({ ...prev, selectedSlot: slot }))
+  }, [])
+
   // Handle browser back/forward buttons
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -336,6 +438,10 @@ export function OnboardingProvider({ children }) {
     setExtractionMetadata,
     setInsuranceUploaded,
     setFaqOpen,
+    setSchedulingInput,
+    setInterpretedPreferences,
+    setMatchedSlots,
+    setSelectedSlot,
     isInitialized,
   }
 
