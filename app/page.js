@@ -31,8 +31,9 @@ export default function Home() {
   useEffect(() => {
     if (isInitialized) {
       // Validate currentStep is a valid number between 1 and 8 (internal routing)
-      // Note: Landing page (1) is not counted in user-facing step count
-      if (typeof currentStep !== 'number' || isNaN(currentStep) || currentStep < 1 || currentStep > 8) {
+      // Note: Step 5 is removed (was Demographics Part 2)
+      // Valid steps: 1=Landing, 2=Demo1, 3=Survey, 4=Encouragement, 6=Insurance Upload, 7=Insurance Results, 8=Scheduling
+      if (typeof currentStep !== 'number' || isNaN(currentStep) || currentStep < 1 || currentStep > 8 || currentStep === 5) {
         console.warn(`Invalid currentStep detected: ${currentStep}. Resetting to step 1.`)
         setCurrentStep(1)
       }
@@ -53,19 +54,7 @@ export default function Home() {
     setCurrentStep(3)
   }, [setCurrentStep])
 
-  // Demographics Part 2 completion handler
-  const handleDemographicsPart2Complete = useCallback((data) => {
-    console.log('Demographics Part 2 completed:', data)
-    // Navigate to Insurance Upload (Step 6)
-    setCurrentStep(6)
-  }, [setCurrentStep])
-
-  // Demographics Part 2 skip handler
-  const handleDemographicsPart2Skip = useCallback(() => {
-    console.log('User skipped demographics part 2')
-    // Navigate to Insurance Upload anyway
-    setCurrentStep(6)
-  }, [setCurrentStep])
+  // Demographics Part 2 removed - EncouragementScreen now goes directly to InsuranceUpload
 
   // Wait for state to initialize before rendering
   if (!isInitialized) {
@@ -78,11 +67,12 @@ export default function Home() {
     )
   }
 
-  // Render appropriate screen based on current step with smooth transition
-  // Internal routing uses 1-8, but user-facing steps are 1-6 (landing page not counted, insurance combined)
+  // Render appropriate screen based on current step
+  // Internal steps: 1=Landing, 2=Demo1, 3=Survey, 4=Encouragement, 6=Insurance Upload, 7=Insurance Results, 8=Scheduling
+  // User-facing steps: 1=Demo1, 2=Survey, 3=Encouragement, 4=Insurance, 5=Scheduling
   const renderScreen = () => {
     switch (currentStep) {
-      case 1: // Landing Page (not counted as a step in progress)
+      case 1: // Landing Page (not counted in progress)
         return <LandingPage />
       case 2: // User-facing Step 1: Demographics - Basic Information
         return (
@@ -95,22 +85,13 @@ export default function Home() {
         )
       case 3: // User-facing Step 2: Intake Survey
         return <IntakeSurvey />
-      case 4: // User-facing Step 3: Encouragement Screen (hidden in progress pills)
+      case 4: // User-facing Step 3: Encouragement Screen
         return <EncouragementScreen />
-      case 5: // User-facing Step 4: Additional Information
-        return (
-          <DemographicsWizard 
-            patientId="temp-patient-id" 
-            onComplete={handleDemographicsPart2Complete}
-            onSkipAll={handleDemographicsPart2Skip}
-            part={2}
-          />
-        )
-      case 6: // User-facing Step 5: Insurance Upload
+      case 6: // User-facing Step 4: Insurance Upload
         return <InsuranceUpload />
-      case 7: // User-facing Step 5: Insurance Results (same step as upload)
+      case 7: // User-facing Step 4: Insurance Results (same step as upload)
         return <InsuranceResults />
-      case 8: // User-facing Step 6: Scheduling
+      case 8: // User-facing Step 5: Scheduling
         return <SchedulingAssistant />
       default:
         // Fallback to step 1 if invalid step

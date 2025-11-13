@@ -19,7 +19,7 @@ export default function PrivacyNotice({ onContinue }) {
             Demographics Form
           </h1>
           <p className="text-lg text-text-body">
-            We'll ask a few questions to better understand your needs.
+            Just a few questions before getting started.
           </p>
         </div>
 

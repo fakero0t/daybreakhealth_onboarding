@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon } from '@heroicons/react/24/solid'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import { detectUserTimezone } from '@/lib/utils/timezone-utils'
@@ -189,95 +190,101 @@ export default function SchedulingAssistant() {
           </div>
         )}
 
-        {/* Page Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
-            Schedule Appointment
-          </h1>
-          <p className="text-base sm:text-lg text-text-body">
-            When are you available?
-          </p>
-        </div>
-
-        {/* Main Content */}
-        <section
-          aria-labelledby="scheduling-heading"
-          className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-8"
-        >
-          <h2 id="scheduling-heading" className="sr-only">
-            Schedule Appointment
-          </h2>
-
-          {phase === PHASES.INPUT && (
-            <NaturalLanguageScheduling
-              onSubmit={handleSubmit}
-              isLoading={isLoading}
-              error={error}
-            />
-          )}
-
-          {phase === PHASES.INTERPRETING && (
-            <div className="text-center py-12" role="status" aria-live="polite">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
-              <p className="text-base text-text-body">
-                Processing...
-              </p>
-                </div>
-          )}
-
-          {phase === PHASES.MATCHING && (
-            <div className="text-center py-12" role="status" aria-live="polite">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
-              <p className="text-base text-text-body">
-                Finding appointments...
-              </p>
-              </div>
-          )}
-
-          {phase === PHASES.RESULTS && (
-            <AvailabilityResults
-              slots={matchedSlots}
-              onSelectSlot={handleSelectSlot}
-              onTryAgain={handleTryAgain}
-            />
-          )}
-
-          {phase === PHASES.CONFIRMATION && selectedSlot && !isConfirmed && (
-            <SchedulingConfirmation
-              selectedSlot={selectedSlot}
-              onConfirm={handleConfirm}
-              onBack={handleBackFromConfirmation}
-            />
-          )}
-
-          {phase === PHASES.CONFIRMATION && isConfirmed && (
+        {/* Show checkmark circle when confirmed, otherwise show normal flow */}
+        {isConfirmed ? (
+          <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <CheckCircleIcon className="w-32 h-32 text-primary-500 mb-6" aria-hidden="true" />
             <div
-              className="bg-success-50 border-2 border-success-200 rounded-lg p-6"
+              className="bg-success-50 border-2 border-success-200 rounded-lg p-6 max-w-2xl"
               role="alert"
               aria-live="polite"
             >
               <p className="text-base text-success-800 text-center">
-                Your preference has been saved. A care coordinator will reach out to you within 1-2 business days.
+                Amazing! You are one step closer to quality care. Please check your email for more details.
               </p>
+            </div>
           </div>
-          )}
-        </section>
+        ) : (
+          <>
+            {/* Page Title */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
+                Schedule Appointment
+              </h1>
+              <p className="text-base sm:text-lg text-text-body">
+                When are you available?
+              </p>
+            </div>
 
-        {/* Help Section */}
-        <section aria-labelledby="help-heading" className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
-          <h2 id="help-heading" className="text-lg font-semibold text-primary-900 mb-3">
-            Need Help?
-          </h2>
-          <p className="text-base text-primary-800 mb-4">
-            You can describe your availability in any way that works for you. For example:
-          </p>
-          <ul className="list-disc list-inside text-base text-primary-800 space-y-2">
-            <li>&quot;I&apos;m only free on weekdays after 5pm&quot;</li>
-            <li>&quot;I can do an appointment between 9am and 11am next Tuesday and Thursday&quot;</li>
-            <li>&quot;Weekends in the morning&quot;</li>
-            <li>&quot;Next week, any day after 2pm&quot;</li>
-          </ul>
-        </section>
+            {/* Main Content */}
+            <section
+              aria-labelledby="scheduling-heading"
+              className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-8"
+            >
+              <h2 id="scheduling-heading" className="sr-only">
+                Schedule Appointment
+              </h2>
+
+              {phase === PHASES.INPUT && (
+                <NaturalLanguageScheduling
+                  onSubmit={handleSubmit}
+                  isLoading={isLoading}
+                  error={error}
+                />
+              )}
+
+              {phase === PHASES.INTERPRETING && (
+                <div className="text-center py-12" role="status" aria-live="polite">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
+                  <p className="text-base text-text-body">
+                    Processing...
+                  </p>
+                </div>
+              )}
+
+              {phase === PHASES.MATCHING && (
+                <div className="text-center py-12" role="status" aria-live="polite">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
+                  <p className="text-base text-text-body">
+                    Finding appointments...
+                  </p>
+                </div>
+              )}
+
+              {phase === PHASES.RESULTS && (
+                <AvailabilityResults
+                  slots={matchedSlots}
+                  onSelectSlot={handleSelectSlot}
+                  onTryAgain={handleTryAgain}
+                />
+              )}
+
+              {phase === PHASES.CONFIRMATION && selectedSlot && !isConfirmed && (
+                <SchedulingConfirmation
+                  selectedSlot={selectedSlot}
+                  onConfirm={handleConfirm}
+                  onBack={handleBackFromConfirmation}
+                />
+              )}
+            </section>
+
+            {/* Help Section */}
+            <section aria-labelledby="help-heading" className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
+              <h2 id="help-heading" className="text-lg font-semibold text-primary-900 mb-3">
+                Need Help?
+              </h2>
+              <p className="text-base text-primary-800 mb-4">
+                You can describe your availability in any way that works for you. For example:
+              </p>
+              <ul className="list-disc list-inside text-base text-primary-800 space-y-2">
+                <li>&quot;I&apos;m only free on weekdays after 5pm&quot;</li>
+                <li>&quot;I can do an appointment between 9am and 11am next Tuesday and Thursday&quot;</li>
+                <li>&quot;Weekends in the morning&quot;</li>
+                <li>&quot;Next week, any day after 2pm&quot;</li>
+              </ul>
+            </section>
+          </>
+        )}
       </div>
 
       {/* FAQ Chatbot */}

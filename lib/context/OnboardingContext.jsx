@@ -12,7 +12,7 @@ import { getAllSymptomKeys } from '../constants/symptom-mapping'
  * OnboardingContext
  * 
  * Manages global state for the onboarding flow including:
- * - Current step (1-5)
+ * - Current step (1-8, where step 5 is removed)
  * - Extracted symptoms (UI-only, not persisted to backend)
  * - Extraction metadata
  * - Insurance upload status
@@ -53,10 +53,14 @@ export function OnboardingProvider({ children }) {
 
   // Validate and sanitize state
   const validateState = useCallback((state) => {
-    // Validate currentStep (must be 1-8)
-    const step = typeof state.currentStep === 'number' && !isNaN(state.currentStep) && state.currentStep >= 1 && state.currentStep <= 8
+    // Validate currentStep (must be 1-8, but step 5 is removed)
+    let step = typeof state.currentStep === 'number' && !isNaN(state.currentStep) && state.currentStep >= 1 && state.currentStep <= 8 && state.currentStep !== 5
       ? state.currentStep
       : 1
+    // If step 5 is detected, redirect to step 4
+    if (state.currentStep === 5) {
+      step = 4
+    }
 
     // Validate extractedSymptoms (must be object with valid symptom keys and values)
     let symptoms = {}
@@ -154,7 +158,8 @@ export function OnboardingProvider({ children }) {
       if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search)
         const stepFromUrl = parseInt(urlParams.get('step') || '0', 10)
-        if (stepFromUrl >= 1 && stepFromUrl <= 8) {
+        // Valid steps: 1-8, but step 5 is removed
+        if (stepFromUrl >= 1 && stepFromUrl <= 8 && stepFromUrl !== 5) {
           initialStep = stepFromUrl
         }
       }
@@ -180,8 +185,8 @@ export function OnboardingProvider({ children }) {
         }
       }
 
-      // Use URL step if valid, otherwise use saved step
-      const finalStep = (initialStep >= 1 && initialStep <= 5) ? initialStep : savedStep
+      // Use URL step if valid, otherwise use saved step (skip step 5)
+      const finalStep = (initialStep >= 1 && initialStep <= 8 && initialStep !== 5) ? initialStep : (savedStep === 5 ? 1 : savedStep)
 
       const loadedState = {
         currentStep: finalStep,
@@ -279,10 +284,15 @@ export function OnboardingProvider({ children }) {
 
   // Update current step
   const setCurrentStep = useCallback((step) => {
-    // Validate step before setting
-    const validStep = typeof step === 'number' && !isNaN(step) && step >= 1 && step <= 8
+    // Validate step before setting (skip step 5 - removed)
+    let validStep = typeof step === 'number' && !isNaN(step) && step >= 1 && step <= 8 && step !== 5
       ? step
       : 1
+    
+    // If somehow step 5 is requested, redirect to step 4
+    if (step === 5) {
+      validStep = 4
+    }
 
     setState(prev => ({ ...prev, currentStep: validStep }))
     
@@ -419,12 +429,17 @@ export function OnboardingProvider({ children }) {
 
     const handlePopState = (event) => {
       if (event.state && event.state.step) {
-        setState(prev => ({ ...prev, currentStep: event.state.step }))
+        const step = event.state.step
+        // Skip step 5 (removed)
+        if (step !== 5 && step >= 1 && step <= 8) {
+          setState(prev => ({ ...prev, currentStep: step }))
+        }
       } else {
         // Parse step from URL if state doesn't have it
         const urlParams = new URLSearchParams(window.location.search)
         const step = parseInt(urlParams.get('step') || '1', 10)
-        if (step >= 1 && step <= 8) {
+        // Skip step 5 (removed)
+        if (step >= 1 && step <= 8 && step !== 5) {
           setState(prev => ({ ...prev, currentStep: step }))
         }
       }
@@ -441,10 +456,11 @@ export function OnboardingProvider({ children }) {
     const urlParams = new URLSearchParams(window.location.search)
     const stepFromUrl = parseInt(urlParams.get('step') || state.currentStep.toString(), 10)
     
-    if (stepFromUrl >= 1 && stepFromUrl <= 8 && stepFromUrl !== state.currentStep) {
+    // Skip step 5 (removed)
+    if (stepFromUrl >= 1 && stepFromUrl <= 8 && stepFromUrl !== 5 && stepFromUrl !== state.currentStep) {
       setState(prev => ({ ...prev, currentStep: stepFromUrl }))
     } else {
-      // Update URL to match current step
+      // Update URL to match current step (skip step 5)
       const url = `/?step=${state.currentStep}`
       window.history.replaceState({ step: state.currentStep }, '', url)
     }

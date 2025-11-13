@@ -23,6 +23,7 @@ export default function ProgressIndicator({
   className = '',
   skipSteps = [], // Array of step numbers to skip in the visual display
   completedSteps = [], // Array of step numbers that are completed even if they're the current step
+  showLabels = true, // Whether to show step text and percentage labels
 }) {
   // Ensure percentage is between 0 and 100
   const clampedPercentage = Math.min(Math.max(percentage || 0, 0), 100)
@@ -51,14 +52,16 @@ export default function ProgressIndicator({
       aria-label={`${label} ${currentStep} of ${totalSteps}`}
     >
       {/* Step text */}
-      <div className={`flex justify-between items-center mb-3 ${textColor}`}>
-        <span className="text-sm font-medium">
-          {label} {currentStep} of {totalSteps}
-        </span>
-        <span className="text-xs">
-          {calculatedPercentage}%
-        </span>
-      </div>
+      {showLabels && (
+        <div className={`flex justify-between items-center mb-3 ${textColor}`}>
+          <span className="text-sm font-medium">
+            {label} {currentStep} of {totalSteps}
+          </span>
+          <span className="text-xs">
+            {calculatedPercentage}%
+          </span>
+        </div>
+      )}
 
       {/* Step Pills */}
       <div className="flex items-center justify-center gap-2">

@@ -1,9 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { SYMPTOMS, SYMPTOM_CATEGORIES, getSymptomsByCategory } from '@/lib/constants/symptom-mapping'
 import Button from '@/components/shared/Button'
-import ProgressIndicator from '@/components/shared/ProgressIndicator'
 
 /**
  * SymptomReviewForm Component
@@ -15,6 +14,14 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
   const continueButtonRef = useRef(null)
   const firstEmptyDropdownRef = useRef(null)
   const firstDropdownRef = useRef(null)
+  
+  // Local state for immediate UI updates (optimistic updates)
+  const [localSymptoms, setLocalSymptoms] = useState(extractedSymptoms || {})
+  
+  // Sync local state with prop changes (when context updates after debounce)
+  useEffect(() => {
+    setLocalSymptoms(extractedSymptoms || {})
+  }, [extractedSymptoms])
 
   // Calculate summary counts
   const calculateSummary = useCallback(() => {
@@ -24,7 +31,7 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
     let notFilled = 0
 
     SYMPTOMS.forEach(symptom => {
-      const value = extractedSymptoms[symptom.key] || ''
+      const value = localSymptoms[symptom.key] || ''
       if (value === 'Daily') {
         daily++
       } else if (value === 'Some') {
@@ -37,12 +44,18 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
     })
 
     return { daily, some, none, notFilled }
-  }, [extractedSymptoms])
+  }, [localSymptoms])
 
   const summary = calculateSummary()
 
-  // Handle symptom change - call parent handler (debouncing handled in parent)
+  // Handle symptom change - update local state immediately, then call parent handler
   const handleSymptomChange = useCallback((symptomKey, newValue) => {
+    // Update local state immediately for instant UI feedback
+    setLocalSymptoms(prev => ({
+      ...prev,
+      [symptomKey]: newValue || ''
+    }))
+    // Call parent handler (debouncing handled in parent)
     onSymptomChange(symptomKey, newValue)
   }, [onSymptomChange])
 
@@ -71,21 +84,10 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
         Skip to continue button
       </a>
 
-      {/* Progress Indicator - Steps 1-5 */}
-      <div className="mb-8">
-        <ProgressIndicator
-          currentStep={2}
-          totalSteps={5}
-          percentage={40}
-          label="Step"
-          skipSteps={[]}
-        />
-      </div>
-
       {/* Explanatory text */}
       <div className="mb-6">
         <p className="text-base text-text-body">
-          Based on your answers, we've identified the following symptoms. Please review and adjust as needed.
+          Based on your answers, we've identified the following symptoms. Please review and make any updates to the form as you see fit.
         </p>
       </div>
 
@@ -124,7 +126,7 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
               {/* Symptoms in category */}
               <div className="px-4 py-4 space-y-4" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '16px', paddingBottom: '16px' }}>
                 {categorySymptoms.map((symptom) => {
-                  const value = extractedSymptoms[symptom.key] || ''
+                  const value = localSymptoms[symptom.key] || ''
                   const isEmpty = value === ''
                   const showCheckmark = saveConfirmations[symptom.key]
 

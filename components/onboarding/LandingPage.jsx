@@ -18,17 +18,16 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background-cream flex items-center justify-center" role="main">
-      <div className="container mx-auto px-4 py-16 max-w-2xl">
+    <main className="min-h-screen bg-background-cream flex items-center justify-center px-4" role="main">
+      <div className="w-full max-w-2xl mx-auto">
         {/* No progress indicator on landing page - it's not a step */}
 
         {/* Main Content */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
           {/* App Name */}
           <h1 className="text-5xl sm:text-5xl font-heading font-bold text-primary-500 mb-6">
-            Welcome to{' '}
             <span className="relative inline-block">
-              Daybreak
+              Daybreak Health
               <svg
                 className="absolute -bottom-1 left-0 w-full h-3 -z-10"
                 viewBox="0 0 200 15"
@@ -62,8 +61,8 @@ export default function LandingPage() {
           </h1>
           
           {/* Company Info */}
-          <p className="text-lg text-text-body mb-12 max-w-xl mx-auto">
-            We are building a world where every young person benefits from mental health support.
+          <p className="text-lg text-text-body mb-12 w-full max-w-xl">
+            Mental health support to help every kid and family thrive.
           </p>
 
           {/* CTA Button */}

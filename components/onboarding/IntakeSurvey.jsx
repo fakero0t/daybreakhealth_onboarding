@@ -55,6 +55,7 @@ const QUESTIONS = [
 export default function IntakeSurvey() {
   const { goToNextStep, goToPreviousStep, currentStep, canGoPrevious } = useStepNavigation()
   const { extractedSymptoms, setExtractedSymptoms, setExtractionMetadata, extractionMetadata } = useOnboardingState()
+  const [showIntro, setShowIntro] = useState(true)
   const [currentQuestion, setCurrentQuestion] = useState(1) // 1-5
   const [narrativeAnswers, setNarrativeAnswers] = useState({
     q1: '', q2: '', q3: '', q4: '', q5: ''
@@ -88,12 +89,17 @@ export default function IntakeSurvey() {
   // Narrative answers are NOT persisted to sessionStorage
   // Users always start with a fresh question list
 
+  // Handle intro screen dismissal
+  const handleIntroNext = useCallback(() => {
+    setShowIntro(false)
+  }, [])
+
   // Track question time - start timer on question load
   useEffect(() => {
-    if (currentQuestion >= 1 && currentQuestion <= 5 && !showReviewForm && !isProcessing) {
+    if (currentQuestion >= 1 && currentQuestion <= 5 && !showReviewForm && !isProcessing && !showIntro) {
       questionStartTimeRef.current = Date.now()
     }
-  }, [currentQuestion, showReviewForm, isProcessing])
+  }, [currentQuestion, showReviewForm, isProcessing, showIntro])
 
   // Log question time on navigation
   const logQuestionTimeOnNavigation = useCallback((questionId) => {
@@ -387,12 +393,12 @@ export default function IntakeSurvey() {
 
   // Focus management - focus textarea on question load
   useEffect(() => {
-    if (textareaRef.current && !showReviewForm && !isProcessing) {
+    if (textareaRef.current && !showReviewForm && !isProcessing && !showIntro) {
       setTimeout(() => {
         textareaRef.current?.focus()
       }, 100)
     }
-  }, [currentQuestion, showReviewForm, isProcessing])
+  }, [currentQuestion, showReviewForm, isProcessing, showIntro])
 
   // Check if browser was closed during processing
   useEffect(() => {
@@ -450,18 +456,6 @@ export default function IntakeSurvey() {
     goToNextStep()
   }, [goToNextStep])
 
-  // Handle going back from review form to edit questions
-  const handleBackToQuestions = useCallback(() => {
-    // Clear extracted symptoms and metadata to allow regeneration
-    setExtractedSymptoms({})
-    setExtractionMetadata({ extractedAt: null, model: null })
-    // Hide review form
-    setShowReviewForm(false)
-    // Reset to question 5 (where they clicked Continue)
-    setCurrentQuestion(5)
-    // Clear any extraction errors
-    setExtractionError(null)
-  }, [setExtractedSymptoms, setExtractionMetadata])
 
   // Check if we should show review form (if symptoms exist in context)
   // Only show review form if extraction metadata exists (meaning questions were actually completed)
@@ -505,21 +499,9 @@ export default function IntakeSurvey() {
     return (
       <main className="min-h-screen bg-background-cream" role="main">
         <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-          {/* Back Buttons */}
-          <div className="mb-6 flex gap-4">
-            {/* Back to Questions Button */}
-            <Button
-              onClick={handleBackToQuestions}
-              variant="text"
-              size="medium"
-              ariaLabel="Go back to edit questions"
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-              Edit Questions
-            </Button>
-            {/* Back to Previous Step Button */}
-            {canGoPrevious && (
+          {/* Back Button */}
+          {canGoPrevious && (
+            <div className="mb-6">
               <Button
                 onClick={goToPreviousStep}
                 variant="text"
@@ -530,8 +512,8 @@ export default function IntakeSurvey() {
                 <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
                 Back
               </Button>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Skip link */}
           <a
@@ -555,19 +537,6 @@ export default function IntakeSurvey() {
 
   // Loading state UI (Phase 2)
   if (isProcessing && !extractionError) {
-    const getStepText = () => {
-      switch (extractionStep) {
-        case 'analyzing':
-          return 'Analyzing...'
-        case 'extracting':
-          return 'Extracting symptoms...'
-        case 'finalizing':
-          return 'Finalizing...'
-        default:
-          return 'Analyzing your responses...'
-      }
-    }
-
     return (
       <main className="min-h-screen bg-background-cream" role="main">
         <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
@@ -594,35 +563,20 @@ export default function IntakeSurvey() {
             </div>
 
             {/* Progress message */}
-            <div className="mb-4">
-              <p className="text-lg font-medium text-primary-500 mb-2">
-                Analyzing your responses...
+            <div className="mb-4 space-y-2">
+              <p className="text-lg font-medium text-primary-500">
+                Whew, that was a lot!
               </p>
-              <p className="text-base text-text-secondary">
-                {getStepText()}
+              <p className="text-base text-text-body">
+                Thanks for spending time on that! This will help us understand and find the best care for your child.
               </p>
             </div>
-
-            {/* Progress steps */}
-            <div className="space-y-2 mb-8">
-              <div className={`text-sm ${extractionStep === 'analyzing' ? 'text-primary-500 font-medium' : 'text-text-secondary'}`}>
-                {extractionStep === 'analyzing' ? '✓' : extractionStep === 'extracting' || extractionStep === 'finalizing' ? '✓' : '○'} Analyzing...
-              </div>
-              <div className={`text-sm ${extractionStep === 'extracting' ? 'text-primary-500 font-medium' : extractionStep === 'finalizing' ? 'text-primary-500 font-medium' : 'text-text-secondary'}`}>
-                {extractionStep === 'extracting' || extractionStep === 'finalizing' ? '✓' : '○'} Extracting symptoms...
-              </div>
-              <div className={`text-sm ${extractionStep === 'finalizing' ? 'text-primary-500 font-medium' : 'text-text-secondary'}`}>
-                {extractionStep === 'finalizing' ? '✓' : '○'} Finalizing...
-              </div>
-            </div>
-          </div>
 
             {/* ARIA live region for screen readers */}
             <div aria-live="polite" aria-atomic="true" className="sr-only">
-              {extractionStep === 'analyzing' && 'Analyzing responses'}
-              {extractionStep === 'extracting' && 'Extracting symptoms'}
-              {extractionStep === 'finalizing' && 'Finalizing'}
+              Whew, that was a lot! Thanks for spending time on that! This will help us understand and find the best care for your child.
             </div>
+          </div>
         </div>
       </main>
     )
@@ -679,6 +633,50 @@ export default function IntakeSurvey() {
             <div aria-live="assertive" aria-atomic="true" className="sr-only">
               {extractionError}
             </div>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  // Intro screen UI
+  if (showIntro) {
+    return (
+      <main className="min-h-screen bg-background-cream flex items-center justify-center p-4" role="main">
+        <div className="w-full max-w-2xl text-center">
+          {/* Back Button */}
+          {canGoPrevious && (
+            <div className="mb-8 flex justify-start">
+              <Button
+                onClick={goToPreviousStep}
+                variant="text"
+                size="medium"
+                ariaLabel="Go back to previous step"
+                className="flex items-center gap-2"
+              >
+                <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
+                Back
+              </Button>
+            </div>
+          )}
+
+          {/* Intro Screen */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-heading font-bold text-primary-500 mb-4">
+              Help us understand what your child is experiencing
+            </h1>
+          </div>
+
+          {/* Next Button */}
+          <div className="flex justify-center">
+            <Button
+              onClick={handleIntroNext}
+              variant="primary"
+              size="medium"
+              ariaLabel="Start questionnaire"
+            >
+              Next
+            </Button>
           </div>
         </div>
       </main>
