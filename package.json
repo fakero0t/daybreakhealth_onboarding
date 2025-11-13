@@ -13,7 +13,10 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "seed": "node scripts/seed.js",
+    "seed:migrations-only": "SKIP_MIGRATIONS=false node scripts/seed.js",
+    "seed:data-only": "SKIP_MIGRATIONS=true node scripts/seed.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
