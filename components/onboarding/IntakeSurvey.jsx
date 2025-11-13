@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import Button from '@/components/shared/Button'
@@ -297,7 +298,7 @@ export default function IntakeSurvey() {
       inFlightRequestRef.current = false
       abortControllerRef.current = null
     }
-  }, [narrativeAnswers, setExtractedSymptoms, setExtractionMetadata, goToNextStep, logQuestionTimeOnNavigation])
+  }, [narrativeAnswers, setExtractedSymptoms, setExtractionMetadata, logQuestionTimeOnNavigation])
 
   const handleContinue = useCallback(() => {
     const questionId = `q${currentQuestion}`

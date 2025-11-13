@@ -78,7 +78,6 @@ export default function RadioGroup({
                   onChange={() => handleRadioChange(optionValue)}
                   disabled={disabled}
                   className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-neutral-300"
-                  aria-invalid={hasError}
                 />
                 <span className="ml-3 text-sm font-medium text-text-body">
                   {optionLabel}

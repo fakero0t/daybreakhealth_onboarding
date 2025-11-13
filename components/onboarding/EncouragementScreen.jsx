@@ -32,7 +32,7 @@ export default function EncouragementScreen() {
 
           {/* Heading */}
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-6">
-            You're Doing Great!
+            You&apos;re Doing Great!
           </h1>
 
           {/* Encouraging Message */}
@@ -145,11 +145,11 @@ export default function EncouragementScreen() {
                   Your Rights
                 </h3>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>All questions are optional - you can skip any you don't want to answer</li>
+                  <li>All questions are optional - you can skip any you don&apos;t want to answer</li>
                   <li>You can update your information at any time</li>
                   <li>You can request to see what information we have about you</li>
                   <li>
-                    You can select "Prefer not to answer" for any sensitive questions
+                    You can select &quot;Prefer not to answer&quot; for any sensitive questions
                   </li>
                 </ul>
               </section>

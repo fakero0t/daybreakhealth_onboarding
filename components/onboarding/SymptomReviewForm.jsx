@@ -87,7 +87,7 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
       {/* Explanatory text */}
       <div className="mb-6">
         <p className="text-base text-text-body">
-          Based on your answers, we've identified the following symptoms. Please review and make any updates to the form as you see fit.
+          Based on your answers, we&apos;ve identified the following symptoms. Please review and make any updates to the form as you see fit.
         </p>
       </div>
 
