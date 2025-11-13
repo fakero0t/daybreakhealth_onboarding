@@ -39,6 +39,8 @@ const INITIAL_STATE = {
   extractedSymptoms: {},
   extractionMetadata: { extractedAt: null, model: null },
   insuranceUploaded: false,
+  extractedInsuranceData: null, // Extracted insurance data (not persisted)
+  insuranceValidationResults: null, // Insurance validation results (not persisted)
   faqOpen: false,
   schedulingInput: '',
   interpretedPreferences: null,
@@ -136,11 +138,25 @@ export function OnboardingProvider({ children }) {
       ? state.appointmentConfirmed
       : false
 
+    // Validate extractedInsuranceData (must be object or null, not persisted)
+    const extractedInsuranceData = (state.extractedInsuranceData === null || 
+      (typeof state.extractedInsuranceData === 'object' && !Array.isArray(state.extractedInsuranceData)))
+      ? state.extractedInsuranceData
+      : null
+
+    // Validate insuranceValidationResults (must be object or null, not persisted)
+    const insuranceValidationResults = (state.insuranceValidationResults === null || 
+      (typeof state.insuranceValidationResults === 'object' && !Array.isArray(state.insuranceValidationResults)))
+      ? state.insuranceValidationResults
+      : null
+
     return {
       currentStep: step,
       extractedSymptoms: symptoms,
       extractionMetadata: metadata,
       insuranceUploaded: insurance,
+      extractedInsuranceData,
+      insuranceValidationResults,
       faqOpen: faq,
       schedulingInput,
       interpretedPreferences,
@@ -423,6 +439,24 @@ export function OnboardingProvider({ children }) {
     saveToLocalStorage(STORAGE_KEYS.APPOINTMENT_CONFIRMED, confirmed)
   }, [])
 
+  // Update extracted insurance data (not persisted)
+  const setExtractedInsuranceData = useCallback((data) => {
+    if (data !== null && (typeof data !== 'object' || Array.isArray(data))) {
+      console.warn('Invalid extractedInsuranceData provided to setExtractedInsuranceData')
+      return
+    }
+    setState(prev => ({ ...prev, extractedInsuranceData: data }))
+  }, [])
+
+  // Update insurance validation results (not persisted)
+  const setInsuranceValidationResults = useCallback((results) => {
+    if (results !== null && (typeof results !== 'object' || Array.isArray(results))) {
+      console.warn('Invalid insuranceValidationResults provided to setInsuranceValidationResults')
+      return
+    }
+    setState(prev => ({ ...prev, insuranceValidationResults: results }))
+  }, [])
+
   // Handle browser back/forward buttons
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -473,6 +507,8 @@ export function OnboardingProvider({ children }) {
     setExtractedSymptom,
     setExtractionMetadata,
     setInsuranceUploaded,
+    setExtractedInsuranceData,
+    setInsuranceValidationResults,
     setFaqOpen,
     setSchedulingInput,
     setInterpretedPreferences,
