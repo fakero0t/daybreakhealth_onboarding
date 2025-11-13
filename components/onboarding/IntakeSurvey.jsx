@@ -7,6 +7,7 @@ import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import Button from '@/components/shared/Button'
 import CharacterCounter from '@/components/shared/CharacterCounter'
 import SymptomReviewForm from '@/components/onboarding/SymptomReviewForm'
+import CenteredScreen from '@/components/shared/CenteredScreen'
 import { saveToLocalStorage, loadFromLocalStorage, removeFromLocalStorage, isLocalStorageAvailable } from '@/lib/utils/localStorage'
 import { logQuestionTime, logRetry, logSymptomEdit, logFormCompletion } from '@/lib/utils/analytics'
 
@@ -497,8 +498,8 @@ export default function IntakeSurvey() {
   // Review form UI (Phase 3)
   if (showReviewForm && extractedSymptoms && Object.keys(extractedSymptoms).length > 0) {
     return (
-      <main className="min-h-screen bg-background-cream" role="main">
-        <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
+      <main className="bg-background-cream overflow-y-auto" style={{ height: 'calc(100vh - 73px)' }} role="main">
+        <div className="container mx-auto px-4 pt-16 sm:pt-20 pb-12 max-w-content">
           {/* Skip link */}
           <a
             href="#symptom-review-summary"
@@ -522,39 +523,25 @@ export default function IntakeSurvey() {
   // Loading state UI (Phase 2)
   if (isProcessing && !extractionError) {
     return (
-      <main className="min-h-screen bg-background-cream" role="main">
-        <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-          <div className="max-w-3xl mx-auto text-center">
-            {/* Spinner */}
-            <div className="mb-8">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-            </div>
-
-            {/* Progress message */}
-            <div className="mb-4 space-y-2">
-              <p className="text-lg font-medium text-primary-500">
-                Thank you for taking the time to answer the questions
-              </p>
-              <p className="text-base text-text-body">
-                This will help us understand and find the best care for your child.
-              </p>
-            </div>
-
-            {/* ARIA live region for screen readers */}
-            <div aria-live="polite" aria-atomic="true" className="sr-only">
-              Thank you for taking the time to answer the questions. This will help us understand and find the best care for your child.
-            </div>
-          </div>
+      <>
+        <CenteredScreen
+          loadingSpinner={true}
+          title="Thank you for taking the time to answer the questions"
+          subtitle="This will help us understand and find the best care for your child."
+        />
+        {/* ARIA live region for screen readers */}
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+          Thank you for taking the time to answer the questions. This will help us understand and find the best care for your child.
         </div>
-      </main>
+      </>
     )
   }
 
   // Error state UI
   if (extractionError) {
     return (
-      <main className="min-h-screen bg-background-cream" role="main">
-        <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
+      <main className="bg-background-cream overflow-y-auto" style={{ height: 'calc(100vh - 73px)' }} role="main">
+        <div className="container mx-auto px-4 pt-16 sm:pt-20 pb-12 max-w-content">
           {/* Back Button */}
           {canGoPrevious && (
             <div className="mb-6">
@@ -610,37 +597,23 @@ export default function IntakeSurvey() {
   // Intro screen UI
   if (showIntro) {
     return (
-      <main className="h-screen bg-background-cream flex items-center justify-center p-4 overflow-hidden" role="main">
-        <div className="w-full max-w-2xl text-center">
-          {/* Intro Screen */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-heading font-bold text-primary-500 mb-4">
-              Create a Care Request
-            </h1>
-            <p className="text-lg text-text-body">
-              Help us understand what your child is experiencing
-            </p>
-          </div>
-
-          {/* Next Button */}
-          <div className="flex justify-center">
-            <Button
-              onClick={handleIntroNext}
-              variant="primary"
-              size="medium"
-              ariaLabel="Start questionnaire"
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      </main>
+      <CenteredScreen
+        title="Create a Care Request"
+        subtitle="Help us understand what your child is experiencing"
+        button={{
+          text: 'Next',
+          onClick: handleIntroNext,
+          variant: 'primary',
+          size: 'medium',
+          ariaLabel: 'Start questionnaire'
+        }}
+      />
     )
   }
 
   return (
-    <main className="h-screen bg-background-cream overflow-y-auto" role="main">
-      <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
+    <main className="bg-background-cream overflow-y-auto" style={{ height: 'calc(100vh - 73px)' }} role="main">
+      <div className="container mx-auto px-4 pt-16 sm:pt-20 pb-12 max-w-content">
         {/* Skip link */}
         <a
           href={`#question-text-${currentQuestionData.id}`}

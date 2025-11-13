@@ -7,7 +7,7 @@ import TopProgressBar from '@/components/shared/TopProgressBar'
 
 // Lazy load all onboarding screens for faster initial load
 const LandingPage = dynamic(() => import('@/components/onboarding/LandingPage'), {
-  loading: () => <div className="min-h-screen bg-neutral-50 flex items-center justify-center"><p className="text-neutral-600">Loading...</p></div>
+  loading: () => <div className="h-screen bg-background-cream flex items-center justify-center"><p className="text-text-body">Loading...</p></div>
 })
 
 const DemographicsWizard = dynamic(() => import('@/components/demographics/DemographicsWizard'))
@@ -72,9 +72,9 @@ export default function Home() {
   // Wait for state to initialize before rendering
   if (!isInitialized) {
     return (
-      <main className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <main className="h-screen bg-background-cream flex items-center justify-center">
         <div className="text-center">
-          <p className="text-neutral-600">Loading...</p>
+          <p className="text-text-body">Loading...</p>
         </div>
       </main>
     )

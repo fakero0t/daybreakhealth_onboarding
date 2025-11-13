@@ -258,8 +258,8 @@ export default function DemographicsWizard({
     : ['guardian_information', 'education', 'developmental_history', 'life_changes'];
 
   return (
-    <div className="h-screen bg-background-cream overflow-y-auto">
-      <div className="max-w-3xl mx-auto px-4 py-8 w-full">
+    <div className="bg-background-cream overflow-y-auto" style={{ height: 'calc(100vh - 73px)' }}>
+      <div className="max-w-3xl mx-auto px-4 pt-8 pb-12 w-full">
         <ProgressIndicator
           currentStep={currentStep}
           totalSteps={PAGES.length}

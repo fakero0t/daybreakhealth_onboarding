@@ -205,7 +205,7 @@ export default function InsuranceUpload() {
   // If showing review screen
   if (showReview && editableData) {
     return (
-      <main className="h-screen bg-background-muted-teal overflow-y-auto" role="main">
+      <main className="h-screen bg-background-cream overflow-y-auto" role="main">
         <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
           {/* Header */}
           <div className="text-center mb-8">
@@ -405,7 +405,7 @@ export default function InsuranceUpload() {
 
   // Main upload screen
   return (
-    <main className="h-screen bg-background-muted-teal overflow-y-auto" role="main">
+    <main className="h-screen bg-background-cream overflow-y-auto" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Header */}
         <div className="text-center mb-8">

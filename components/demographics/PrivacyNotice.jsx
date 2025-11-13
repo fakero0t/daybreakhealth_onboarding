@@ -7,42 +7,27 @@
 'use client';
 
 import { useState } from 'react';
+import CenteredScreen from '@/components/shared/CenteredScreen';
+import Button from '@/components/shared/Button';
 
 export default function PrivacyNotice({ onContinue }) {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
-      <div className="max-w-2xl w-full text-center space-y-8 sm:space-y-10 lg:space-y-12">
-        {/* Title and Subtitle Section */}
-        <div className="space-y-4 sm:space-y-5">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-primary-500">
-            Demographics Form
-          </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-text-body max-w-xl mx-auto">
-            Just a few questions before getting started.
-          </p>
-        </div>
-
-        {/* CTA Button Section */}
-        <div className="flex flex-col items-center space-y-6 sm:space-y-8">
-          <button
-            onClick={onContinue}
-            className="
-              px-8 sm:px-10 lg:px-12 py-3 sm:py-3.5 lg:py-4 
-              text-base sm:text-lg font-medium text-white
-              bg-secondary-500 border border-transparent rounded-full
-              hover:bg-secondary-600 focus:outline-none focus:ring-2
-              focus:ring-offset-2 focus:ring-secondary-500
-              transition-all duration-200 shadow-sm hover:shadow-md
-              w-full sm:w-auto
-            "
-          >
-            Continue to Demographics Form
-          </button>
-          
-          {/* Privacy Notice */}
-          <p className="text-xs sm:text-sm text-text-secondary max-w-lg mx-auto px-4">
+    <>
+      <CenteredScreen
+        title="Demographics Form"
+        subtitle="Just a few questions before getting started."
+        button={{
+          text: 'Continue to Demographics Form',
+          onClick: onContinue,
+          variant: 'primary',
+          size: 'large',
+          ariaLabel: 'Continue to demographics form',
+          className: 'w-full sm:w-auto px-8 sm:px-10 lg:px-12'
+        }}
+        footer={
+          <p className="text-xs sm:text-sm text-text-secondary">
             All information is protected under HIPAA and kept confidential.{' '}
             <button
               onClick={() => setShowModal(true)}
@@ -51,8 +36,8 @@ export default function PrivacyNotice({ onContinue }) {
               View privacy details
             </button>
           </p>
-        </div>
-      </div>
+        }
+      />
 
       {/* Privacy Modal */}
       {showModal && (
@@ -168,7 +153,7 @@ export default function PrivacyNotice({ onContinue }) {
       </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

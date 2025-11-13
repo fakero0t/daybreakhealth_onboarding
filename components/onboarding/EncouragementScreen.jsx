@@ -21,41 +21,41 @@ export default function EncouragementScreen() {
   }
 
   return (
-    <main className="h-screen bg-background-cream overflow-y-auto" role="main">
-      <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-        {/* Main Content */}
-        <div className="max-w-2xl mx-auto text-center">
-          {/* Success Icon */}
-          <div className="mb-8">
-            <CheckCircleIcon className="w-20 h-20 text-primary-500 mx-auto" aria-hidden="true" />
-          </div>
+    <>
+      <main className="h-screen bg-background-cream flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden" role="main">
+        <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+          <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8">
+            {/* Success Icon */}
+            <div className="flex-shrink-0">
+              <CheckCircleIcon className="w-20 h-20 text-primary-500 mx-auto" aria-hidden="true" />
+            </div>
 
-          {/* Heading */}
-          <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-6">
-            You&apos;re Doing Great!
-          </h1>
+            {/* Heading */}
+            <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500">
+              You&apos;re Doing Great!
+            </h1>
 
-          {/* Encouraging Message */}
-          <div className="mb-8 space-y-4 text-lg text-text-body">
-            <p>
+            {/* Encouraging Message */}
+            <p className="text-base sm:text-lg lg:text-xl text-text-body max-w-xl mx-auto leading-relaxed">
               Just a few more questions before we can match you with a provider.
             </p>
-          </div>
 
-          {/* Continue Button */}
-          <div className="flex flex-col items-center">
-            <Button
-              onClick={handleContinue}
-              variant="primary"
-              size="large"
-              ariaLabel="Continue"
-              className="w-full sm:w-auto"
-            >
-              Continue
-            </Button>
+            {/* Continue Button */}
+            <div className="flex flex-col items-center w-full sm:w-auto flex-shrink-0">
+              <Button
+                onClick={handleContinue}
+                variant="primary"
+                size="large"
+                ariaLabel="Continue"
+                className="w-full sm:w-auto"
+              >
+                Continue
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
+
 
       {/* Privacy Modal */}
       {showPrivacyModal && (
@@ -171,7 +171,7 @@ export default function EncouragementScreen() {
           </div>
         </div>
       )}
-    </main>
+    </>
   )
 }
 

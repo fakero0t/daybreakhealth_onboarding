@@ -29,6 +29,9 @@ export default function InsuranceResults() {
   const message = insuranceValidationResults?.message || 'Unable to validate insurance. You can still proceed.'
   const insuranceName = extractedInsuranceData?.insurance_company_name || insuranceValidationResults?.matched_insurance?.name || 'Your insurance'
 
+  // Check if message indicates not in network
+  const isNotInNetwork = message.toLowerCase().includes('not currently in our network') || message.toLowerCase().includes('not in our network')
+
   // Determine status type
   let statusType = 'invalid'
   let StatusIcon = XCircleIcon
@@ -37,11 +40,21 @@ export default function InsuranceResults() {
   let iconColor = 'text-neutral-500'
 
   if (is_valid) {
-    statusType = 'valid'
-    StatusIcon = CheckCircleIcon
-    statusColor = 'text-success-600'
-    bgColor = 'bg-success-100'
-    iconColor = 'text-success-600'
+    if (isNotInNetwork) {
+      // Insurance is valid but not in network - show yellow
+      statusType = 'not_in_network'
+      StatusIcon = CheckCircleIcon
+      statusColor = 'text-warning-600'
+      bgColor = 'bg-warning-100'
+      iconColor = 'text-warning-600'
+    } else {
+      // Insurance is valid and in network - show green
+      statusType = 'valid'
+      StatusIcon = CheckCircleIcon
+      statusColor = 'text-success-600'
+      bgColor = 'bg-success-100'
+      iconColor = 'text-success-600'
+    }
   }
 
   return (

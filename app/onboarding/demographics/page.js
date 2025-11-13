@@ -29,13 +29,11 @@ export default function DemographicsOnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <DemographicsWizard
-        patientId={patientId}
-        onComplete={handleComplete}
-        onSkipAll={handleSkipAll}
-      />
-    </div>
+    <DemographicsWizard
+      patientId={patientId}
+      onComplete={handleComplete}
+      onSkipAll={handleSkipAll}
+    />
   );
 }
 

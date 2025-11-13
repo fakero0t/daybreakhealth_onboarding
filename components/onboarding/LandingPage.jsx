@@ -20,6 +20,9 @@ export default function LandingPage() {
 
   return (
     <main className="h-screen bg-background-cream flex flex-col px-4 overflow-hidden" role="main">
+      {/* Spacer to account for TopProgressBar height to prevent layout shift */}
+      <div className="h-[73px] flex-shrink-0" aria-hidden="true" />
+      
       {/* Logo in top left */}
       <div className="absolute top-6 left-6">
         <DaybreakLogo size="default" />
