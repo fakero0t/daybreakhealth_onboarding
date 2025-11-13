@@ -134,7 +134,7 @@ export default function FAQChatbot() {
             {FAQ_ITEMS.map((item) => {
               const isOpen = openItems.has(item.id)
               return (
-                <div key={item.id} className="border-b border-neutral-200 last:border-b-0">
+                <div key={item.id} className="border-b border-neutral-200">
                   <button
                     onClick={() => toggleItem(item.id)}
                     className="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset transition-colors duration-normal"
@@ -167,6 +167,45 @@ export default function FAQChatbot() {
                 </div>
               )
             })}
+            
+            {/* Contact Staff Section */}
+            <div className="border-t-2 border-primary-200 bg-primary-50">
+              <button
+                onClick={() => toggleItem('contact-staff')}
+                className="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset transition-colors duration-normal"
+                aria-expanded={openItems.has('contact-staff')}
+                aria-controls="faq-answer-contact-staff"
+              >
+                <span className="text-sm font-medium text-primary-700 pr-4">
+                  Chat live with a staff member
+                </span>
+                {openItems.has('contact-staff') ? (
+                  <ChevronUpIcon className="w-5 h-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
+                ) : (
+                  <ChevronDownIcon className="w-5 h-5 text-primary-600 flex-shrink-0" aria-hidden="true" />
+                )}
+              </button>
+              <div
+                id="faq-answer-contact-staff"
+                className={`overflow-hidden transition-all duration-normal ease-in-out ${
+                  openItems.has('contact-staff') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+                style={{
+                  transition: 'max-height 250ms ease-in-out, opacity 250ms ease-in-out'
+                }}
+                aria-hidden={!openItems.has('contact-staff')}
+              >
+                <div className="px-4 pb-4 text-sm text-text-body">
+                  <p className="mb-3">Need to speak with someone? Give us a call:</p>
+                  <a
+                    href="tel:+1-800-555-1234"
+                    className="text-primary-600 hover:text-primary-700 font-medium text-base underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded"
+                  >
+                    (800) 555-1234
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

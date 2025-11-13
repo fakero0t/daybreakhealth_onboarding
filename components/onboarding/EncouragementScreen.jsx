@@ -48,22 +48,11 @@ export default function EncouragementScreen() {
               onClick={handleContinue}
               variant="primary"
               size="large"
-              ariaLabel="Continue to Demographics Form"
-              className="w-full sm:w-auto mb-3"
+              ariaLabel="Continue"
+              className="w-full sm:w-auto"
             >
-              Continue to Demographics Form
+              Continue
             </Button>
-            
-            {/* Privacy Text */}
-            <p className="text-sm text-text-secondary">
-              All information is protected under HIPAA and kept confidential.{' '}
-              <button
-                onClick={() => setShowPrivacyModal(true)}
-                className="text-primary-500 hover:text-primary-600 underline focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-full px-1"
-              >
-                View privacy details
-              </button>
-            </p>
           </div>
         </div>
       </div>

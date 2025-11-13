@@ -5,6 +5,7 @@ import { CheckCircleIcon } from '@heroicons/react/24/solid'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import { detectUserTimezone } from '@/lib/utils/timezone-utils'
 import FAQChatbot from '@/components/shared/FAQChatbot'
+import Button from '@/components/shared/Button'
 import NaturalLanguageScheduling from './NaturalLanguageScheduling'
 import AvailabilityResults from './AvailabilityResults'
 import SchedulingConfirmation from './SchedulingConfirmation'
@@ -175,7 +176,7 @@ export default function SchedulingAssistant() {
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
             <CheckCircleIcon className="w-32 h-32 text-primary-500 mb-6" aria-hidden="true" />
             <div
-              className="bg-success-50 border-2 border-success-200 rounded-lg p-6 max-w-2xl"
+              className="bg-success-50 border-2 border-success-200 rounded-lg p-6 max-w-2xl mb-6"
               role="alert"
               aria-live="polite"
             >
@@ -183,6 +184,14 @@ export default function SchedulingAssistant() {
                 Amazing! You are one step closer to quality care. Please check your email for more details.
               </p>
             </div>
+            <Button
+              onClick={() => window.open('https://www.daybreakhealth.com/', '_blank')}
+              variant="primary"
+              size="large"
+              ariaLabel="Visit Daybreak Health website"
+            >
+              Visit Daybreak Health
+            </Button>
           </div>
         ) : (
           <>
