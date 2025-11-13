@@ -26,10 +26,10 @@ export default function LifeChangesPage({ data, onChange }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-heading font-bold text-primary-500 mb-2">
           Significant Life Changes
         </h2>
-        <p className="text-gray-600">
+        <p className="text-text-body">
           Have there been any significant changes in life? You can select multiple options. All fields are optional.
         </p>
       </div>
@@ -48,8 +48,8 @@ export default function LifeChangesPage({ data, onChange }) {
         />
       </div>
 
-      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-sm text-blue-900">
+      <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
+        <p className="text-sm text-primary-900">
           <strong>Note:</strong> This information helps us provide better care and support. 
           All information is kept confidential and secure.
         </p>

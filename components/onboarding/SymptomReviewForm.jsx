@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { SYMPTOMS, SYMPTOM_CATEGORIES, getSymptomsByCategory } from '@/lib/constants/symptom-mapping'
 import Button from '@/components/shared/Button'
+import ProgressIndicator from '@/components/shared/ProgressIndicator'
 
 /**
  * SymptomReviewForm Component
@@ -69,6 +70,24 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
       >
         Skip to continue button
       </a>
+
+      {/* Progress Indicator - Steps 1-5 */}
+      <div className="mb-8">
+        <ProgressIndicator
+          currentStep={2}
+          totalSteps={5}
+          percentage={40}
+          label="Step"
+          skipSteps={[]}
+        />
+      </div>
+
+      {/* Explanatory text */}
+      <div className="mb-6">
+        <p className="text-base text-text-body">
+          Based on your answers, we've identified the following symptoms. Please review and adjust as needed.
+        </p>
+      </div>
 
       {/* Summary count display */}
       <div id="symptom-review-summary" className="mb-8 p-4 bg-white rounded-lg border border-neutral-200">
@@ -168,8 +187,7 @@ export default function SymptomReviewForm({ extractedSymptoms, onSymptomChange, 
                           {/* Checkmark confirmation */}
                           {showCheckmark && (
                             <span
-                              className="text-green-500 transition-opacity duration-300"
-                              style={{ color: '#10B981' }}
+                              className="text-primary-500 transition-opacity duration-300"
                               aria-label="Saved"
                               role="status"
                             >

@@ -22,6 +22,7 @@ export default function ProgressIndicator({
   subtle = false,
   className = '',
   skipSteps = [], // Array of step numbers to skip in the visual display
+  completedSteps = [], // Array of step numbers that are completed even if they're the current step
 }) {
   // Ensure percentage is between 0 and 100
   const clampedPercentage = Math.min(Math.max(percentage || 0, 0), 100)
@@ -69,8 +70,8 @@ export default function ProgressIndicator({
             return null;
           }
           
-          const isCompleted = stepNumber < currentStep;
-          const isCurrent = stepNumber === currentStep;
+          const isCompleted = stepNumber < currentStep || completedSteps.includes(stepNumber);
+          const isCurrent = stepNumber === currentStep && !completedSteps.includes(stepNumber);
           
           // Check if this is the last visible step
           const visibleSteps = Array.from({ length: totalSteps }, (_, i) => i + 1)
@@ -84,10 +85,10 @@ export default function ProgressIndicator({
                   w-8 h-8 rounded-full flex items-center justify-center
                   text-xs font-medium transition-colors duration-200
                   ${isCurrent 
-                    ? 'bg-blue-600 text-white' 
+                    ? 'bg-primary-500 text-white' 
                     : isCompleted 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-gray-200 text-gray-600'
+                      ? 'bg-primary-600 text-white' 
+                      : 'bg-neutral-200 text-neutral-600'
                   }
                 `}
               >
@@ -95,7 +96,7 @@ export default function ProgressIndicator({
               </div>
               {!isLastVisibleStep && (
                 <div 
-                  className={`w-4 h-0.5 ${isCompleted ? 'bg-green-500' : 'bg-gray-300'}`}
+                  className={`w-4 h-0.5 ${isCompleted ? 'bg-primary-600' : 'bg-neutral-300'}`}
                 />
               )}
             </div>

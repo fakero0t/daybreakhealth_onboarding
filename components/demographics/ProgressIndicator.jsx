@@ -36,23 +36,23 @@ export default function ProgressIndicator({
     <div className="w-full mb-6" role="progressbar" aria-valuenow={currentStep} aria-valuemin="1" aria-valuemax={totalSteps}>
       <div className="flex items-center justify-between mb-2">
         <div>
-          <p className="text-sm font-medium text-gray-600">
+          <p className="text-sm font-medium text-text-body">
             Step {currentStep} of {totalSteps}
           </p>
-          <p className="text-lg font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-text-body">
             {customTitle || `Demographics - ${sectionName}`}
           </p>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-text-secondary">
           {Math.round(percentage)}% complete
         </div>
       </div>
 
       {/* Progress Bar */}
       {showProgressBar && (
-        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
           <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
+            className="bg-primary-500 h-2 rounded-full transition-all duration-300 ease-out"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -72,10 +72,10 @@ export default function ProgressIndicator({
                   px-3 py-1 rounded-full text-xs font-medium
                   transition-colors duration-200
                   ${isCurrent 
-                    ? 'bg-blue-600 text-white' 
+                    ? 'bg-primary-500 text-white' 
                     : isCompleted 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-gray-100 text-gray-600'
+                      ? 'bg-primary-100 text-primary-700' 
+                      : 'bg-neutral-100 text-neutral-600'
                   }
                 `}
               >

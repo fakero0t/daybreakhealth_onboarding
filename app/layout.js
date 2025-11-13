@@ -1,4 +1,4 @@
-import { Poppins, Open_Sans } from 'next/font/google'
+import { Poppins, Vollkorn } from 'next/font/google'
 import './globals.css'
 import { OnboardingProvider } from '@/lib/context/OnboardingContext'
 
@@ -10,10 +10,10 @@ const poppins = Poppins({
   preload: true,
 })
 
-const openSans = Open_Sans({ 
+const vollkorn = Vollkorn({ 
   subsets: ['latin'],
-  variable: '--font-open-sans',
-  weight: ['400', '500', '600'],
+  variable: '--font-vollkorn',
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
   preload: true,
 })
@@ -26,7 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
+      <body className={`${poppins.variable} ${vollkorn.variable} font-sans`}>
         <OnboardingProvider>
           {children}
         </OnboardingProvider>

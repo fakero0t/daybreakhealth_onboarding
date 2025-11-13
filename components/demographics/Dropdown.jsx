@@ -38,13 +38,13 @@ export default function Dropdown({
 
   return (
     <div className="w-full">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={name} className="block text-sm font-medium text-text-body mb-1">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       {helpText && (
-        <p className="text-sm text-gray-500 mb-2">{helpText}</p>
+        <p className="text-sm text-text-secondary mb-2">{helpText}</p>
       )}
 
       <select
@@ -54,12 +54,12 @@ export default function Dropdown({
         onChange={handleSelectChange}
         disabled={disabled}
         className={`
-          w-full px-4 py-2 border rounded-lg
-          focus:outline-none focus:ring-2 focus:ring-blue-500
-          disabled:bg-gray-100 disabled:cursor-not-allowed
-          ${hasError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'}
+          w-full px-4 py-2 border rounded-lg bg-white
+          focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+          disabled:bg-neutral-100 disabled:cursor-not-allowed
+          ${hasError ? 'border-red-500 focus:ring-red-500' : 'border-neutral-300'}
           transition-colors duration-200
-          ${!value ? 'text-gray-400' : 'text-gray-900'}
+          ${!value ? 'text-neutral-400' : 'text-text-body'}
         `}
         aria-invalid={hasError}
         aria-describedby={hasError ? `${name}-error` : undefined}

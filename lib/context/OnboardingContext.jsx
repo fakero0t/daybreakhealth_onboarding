@@ -31,6 +31,7 @@ const STORAGE_KEYS = {
   INTERPRETED_PREFERENCES: 'interpreted_preferences',
   MATCHED_SLOTS: 'matched_slots',
   SELECTED_SLOT: 'selected_slot',
+  APPOINTMENT_CONFIRMED: 'appointment_confirmed',
 }
 
 const INITIAL_STATE = {
@@ -43,6 +44,7 @@ const INITIAL_STATE = {
   interpretedPreferences: null,
   matchedSlots: [],
   selectedSlot: null,
+  appointmentConfirmed: false,
 }
 
 export function OnboardingProvider({ children }) {
@@ -125,6 +127,11 @@ export function OnboardingProvider({ children }) {
       ? state.selectedSlot
       : null
 
+    // Validate appointmentConfirmed (must be boolean)
+    const appointmentConfirmed = typeof state.appointmentConfirmed === 'boolean'
+      ? state.appointmentConfirmed
+      : false
+
     return {
       currentStep: step,
       extractedSymptoms: symptoms,
@@ -135,6 +142,7 @@ export function OnboardingProvider({ children }) {
       interpretedPreferences,
       matchedSlots,
       selectedSlot,
+      appointmentConfirmed,
     }
   }, [])
 
@@ -160,6 +168,7 @@ export function OnboardingProvider({ children }) {
       const savedInterpretedPreferences = loadFromLocalStorage(STORAGE_KEYS.INTERPRETED_PREFERENCES, null)
       const savedMatchedSlots = loadFromLocalStorage(STORAGE_KEYS.MATCHED_SLOTS, [])
       const savedSelectedSlot = loadFromLocalStorage(STORAGE_KEYS.SELECTED_SLOT, null)
+      const savedAppointmentConfirmed = loadFromLocalStorage(STORAGE_KEYS.APPOINTMENT_CONFIRMED, false)
 
       // One-time migration: Clear old surveyAnswers if it exists
       const oldSurveyAnswers = loadFromLocalStorage('survey_answers', null)
@@ -184,6 +193,7 @@ export function OnboardingProvider({ children }) {
         interpretedPreferences: savedInterpretedPreferences,
         matchedSlots: savedMatchedSlots,
         selectedSlot: savedSelectedSlot,
+        appointmentConfirmed: savedAppointmentConfirmed,
       }
 
       // Validate and sanitize loaded state
@@ -393,6 +403,16 @@ export function OnboardingProvider({ children }) {
     setState(prev => ({ ...prev, selectedSlot: slot }))
   }, [])
 
+  // Update appointment confirmed status
+  const setAppointmentConfirmed = useCallback((confirmed) => {
+    if (typeof confirmed !== 'boolean') {
+      console.warn('Invalid appointmentConfirmed provided to setAppointmentConfirmed')
+      return
+    }
+    setState(prev => ({ ...prev, appointmentConfirmed: confirmed }))
+    saveToLocalStorage(STORAGE_KEYS.APPOINTMENT_CONFIRMED, confirmed)
+  }, [])
+
   // Handle browser back/forward buttons
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -442,6 +462,7 @@ export function OnboardingProvider({ children }) {
     setInterpretedPreferences,
     setMatchedSlots,
     setSelectedSlot,
+    setAppointmentConfirmed,
     isInitialized,
   }
 

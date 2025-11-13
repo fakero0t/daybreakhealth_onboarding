@@ -32,10 +32,12 @@ export default function SchedulingAssistant() {
     interpretedPreferences,
     matchedSlots,
     selectedSlot,
+    appointmentConfirmed,
     setSchedulingInput,
     setInterpretedPreferences,
     setMatchedSlots,
     setSelectedSlot,
+    setAppointmentConfirmed,
     isInitialized,
   } = useOnboardingState()
 
@@ -48,15 +50,22 @@ export default function SchedulingAssistant() {
   useEffect(() => {
     if (!isInitialized) return
 
+    // Restore confirmed state from context
+    if (appointmentConfirmed) {
+      setIsConfirmed(true)
+    }
+
     // Restore phase based on context state
-    if (selectedSlot) {
+    if (appointmentConfirmed && selectedSlot) {
+      setPhase(PHASES.CONFIRMATION)
+    } else if (selectedSlot) {
       setPhase(PHASES.CONFIRMATION)
     } else if (matchedSlots && matchedSlots.length > 0) {
       setPhase(PHASES.RESULTS)
     } else if (schedulingInput) {
       setPhase(PHASES.INPUT)
     }
-  }, [isInitialized, selectedSlot, matchedSlots, schedulingInput])
+  }, [isInitialized, selectedSlot, matchedSlots, schedulingInput, appointmentConfirmed])
 
   // Detect user timezone on mount
   useEffect(() => {
@@ -141,6 +150,7 @@ export default function SchedulingAssistant() {
     // Show success message
     // Note: No actual appointment booking - just storing preference
     setIsConfirmed(true)
+    setAppointmentConfirmed(true)
     // TODO: Navigate to completion/confirmation screen in final onboarding step
   }
 
@@ -192,7 +202,7 @@ export default function SchedulingAssistant() {
         {/* Main Content */}
         <section
           aria-labelledby="scheduling-heading"
-          className="bg-white rounded-lg shadow-md p-6 sm:p-8 mb-8"
+          className="bg-white rounded-xl shadow-md p-6 sm:p-8 mb-8"
         >
           <h2 id="scheduling-heading" className="sr-only">
             Schedule Appointment

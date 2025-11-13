@@ -6,34 +6,44 @@ import { useOnboardingState } from '@/lib/context/OnboardingContext'
 
 const FAQ_ITEMS = [
   {
-    id: 'services',
-    question: 'What services does Daybreak Health offer?',
-    answer: 'Daybreak Health offers comprehensive mental health services for children and adolescents, including individual therapy, family therapy, and specialized support for anxiety, depression, and behavioral challenges. Our licensed clinicians work with families to create personalized treatment plans.',
+    id: 'teletherapy-sessions',
+    question: 'How do the teletherapy sessions work?',
+    answer: 'Daybreak provides video-based 1:1 teletherapy sessions between a student and their matched therapist. These sessions occur weekly for 50-minutes at a regular time with their assigned therapist. We work hard to accommodate the time that works best for the student and family\'s schedules. In between sessions, a student may get additional support from their therapist through text-based messaging.',
   },
   {
-    id: 'insurance',
-    question: 'What if my insurance isn\'t accepted?',
-    answer: 'If your insurance isn\'t accepted, we offer flexible payment options and can work with you to find a solution that fits your family\'s needs. Our care coordinators can discuss payment plans and alternative options with you.',
+    id: 'therapy-cost',
+    question: 'How much does therapy cost?',
+    answer: 'At Daybreak, our mission is to make high quality mental health support accessible to all kids who need it. We are able to do this through our partnerships with both health insurance providers and school districts. In many cases, our partnership with your school district makes therapy sessions accessible to families at no cost. In some cases, however, you will be responsible for the insurance co-pay for therapy sessions. Please reach out to your school directly or send us an email at carecoordinator@daybreakhealth.com to find out if co-pays would be required.',
   },
   {
-    id: 'survey-time',
-    question: 'How long does the intake survey take?',
-    answer: 'The intake survey typically takes about 10-15 minutes to complete. You can take your time and answer at your own pace. All questions are optional, and you can skip any that you prefer not to answer.',
+    id: 'insurance-required',
+    question: 'Do I have to submit our insurance information?',
+    answer: 'In many cases, any student regardless of their insurance status can use Daybreak Health at no cost to the family. If you are not sure whether your school\'s partnership with Daybreak covers uninsured students, reach out to your school counselor or contact us directly at carecoordinator@daybreakhealth.com to find out which students are covered. If you do not have insurance for your child, please let us know in the Parent Welcome Packet.',
+  },
+  {
+    id: 'therapist-matching',
+    question: 'How is my child matched with their therapist?',
+    answer: 'Daybreak has a personalized and culturally-responsive matching process that allows us to make a match between each student and the right therapist for them. Our clinicians all have years of experience working with youth, speak different languages, 74% report as BIPOC, and 14% as members of the LGTBQIA+ community. Additionally our clinicians specialize across 26 different mental health conditions and 13 modalities of care. Our smart matching process allows us to match a student to their clinician based on presenting need, clinical style, personality, schedule and more. This results in 90% of students reporting being satisfied with their clinical match.',
+  },
+  {
+    id: 'session-location',
+    question: 'When and where do the teletherapy sessions take place?',
+    answer: 'Students can meet with their therapist before, during, or after school. At home or at school. Over the weekend or on school breaks or holidays. Our counselors are available between 7am and 8pm during the week, on Saturdays, and over school breaks. Some schools prefer that students meet with their therapist outside of school hours so that is a conversation for families to have with their students\' school counselor.',
+  },
+  {
+    id: 'child-progress',
+    question: 'How do I know about the progress my child is making in the teletherapy program?',
+    answer: 'Our clinicians have regular check-ins with the student\'s family. It\'s an opportunity for clinicians to share what they are working on in their sessions and how families can help to effectively support the child in school and at home. We always respect the fundamental confidentiality of our sessions with the student.',
+  },
+  {
+    id: 'privacy-protection',
+    question: 'How do I know my child\'s privacy is protected?',
+    answer: 'Daybreak Health\'s platforms are compliant with all federal and state privacy laws, including but not limited to FERPA and HIPAA. We follow each school district\'s process for review or correction of any student data held and adhere to any identified Data Privacy Agreements. The public agencies will own the records of all student data sent to Daybreak Health. The student and parents/guardians have access to—and own—all records of therapy with Daybreak.',
   },
   {
     id: 'after-onboarding',
     question: 'What happens after I complete onboarding?',
     answer: 'After completing onboarding, a care coordinator will reach out to you within 1-2 business days to discuss next steps, answer any questions, and help schedule your first appointment with a clinician who\'s a good fit for your child.',
-  },
-  {
-    id: 'needs-assessment',
-    question: 'How do I know if my child needs mental health services?',
-    answer: 'If you\'re noticing changes in your child\'s behavior, mood, school performance, or relationships that concern you, it may be helpful to speak with a mental health professional. There\'s no harm in seeking support, and early intervention can make a significant difference.',
-  },
-  {
-    id: 'security',
-    question: 'Is my information secure?',
-    answer: 'Yes, we take your privacy and security seriously. All information you provide is kept confidential and secure. We follow HIPAA guidelines and use industry-standard security measures to protect your family\'s information.',
   },
 ]
 

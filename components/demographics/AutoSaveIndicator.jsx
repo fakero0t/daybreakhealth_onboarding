@@ -60,7 +60,7 @@ export default function AutoSaveIndicator({
       )}
 
       {status === 'saved' && (
-        <div className="flex items-center gap-2 text-sm text-green-600">
+        <div className="flex items-center gap-2 text-sm text-primary-600">
           <svg 
             className="h-4 w-4" 
             fill="currentColor" 

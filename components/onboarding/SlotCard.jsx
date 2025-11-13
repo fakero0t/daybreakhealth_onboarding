@@ -26,7 +26,7 @@ export default function SlotCard({ slot, isSelected, onSelect }) {
   return (
     <div
       className={`
-        bg-white rounded-lg border-2 p-4 sm:p-6
+        bg-white rounded-xl border-2 p-4 sm:p-6
         transition-all duration-normal
         ${isSelected
           ? 'border-primary-500 shadow-md bg-primary-50'

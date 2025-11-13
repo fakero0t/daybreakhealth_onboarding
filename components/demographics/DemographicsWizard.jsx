@@ -224,7 +224,7 @@ export default function DemographicsWizard({
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <svg 
-            className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-4" 
+            className="animate-spin h-12 w-12 text-primary-500 mx-auto mb-4" 
             xmlns="http://www.w3.org/2000/svg" 
             fill="none" 
             viewBox="0 0 24 24"
@@ -243,7 +243,7 @@ export default function DemographicsWizard({
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-text-body">Loading...</p>
         </div>
       </div>
     );
@@ -258,19 +258,28 @@ export default function DemographicsWizard({
     : ['guardian_information', 'education', 'developmental_history', 'life_changes'];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <ProgressIndicator
-        currentStep={currentStep}
-        totalSteps={PAGES.length}
-        sectionName={currentPageName}
-        sectionsCompleted={sectionsCompleted}
-        showSectionPills={part !== 1}
-        showProgressBar={part !== 1}
-        customTitle={part === 2 ? "Additional Information" : null}
-        sectionsToShow={sectionsToShow}
-      />
+    <div className="min-h-screen bg-background-cream">
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <ProgressIndicator
+          currentStep={currentStep}
+          totalSteps={PAGES.length}
+          sectionName={currentPageName}
+          sectionsCompleted={sectionsCompleted}
+          showSectionPills={part !== 1}
+          showProgressBar={false}
+          customTitle={part === 2 ? "Additional Information" : null}
+          sectionsToShow={sectionsToShow}
+        />
 
-      <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-8">
+        {part === 2 && (
+          <div className="mb-6 text-center">
+            <p className="text-base text-text-body">
+              Just a few more demographics questions we need
+            </p>
+          </div>
+        )}
+
+        <div className="bg-white shadow-md rounded-xl border border-neutral-200 p-8">
         {/* Auto-save indicator hidden (backend disabled) */}
         {/* <AutoSaveIndicator
           status={autoSaveStatus}
@@ -294,16 +303,17 @@ export default function DemographicsWizard({
         />
       </div>
 
-      {currentStep === 1 && (
-        <div className="mt-4 text-center">
-          <button
-            onClick={handleSkipAll}
-            className="text-sm text-gray-500 hover:text-gray-700 underline"
-          >
-            Skip entire demographics form
-          </button>
-        </div>
-      )}
+        {currentStep === 1 && (
+          <div className="mt-4 text-center">
+            <button
+              onClick={handleSkipAll}
+              className="text-sm text-primary-500 hover:text-primary-600 underline rounded-full px-4 py-2 hover:bg-primary-50 transition-colors"
+            >
+              Skip entire demographics form
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

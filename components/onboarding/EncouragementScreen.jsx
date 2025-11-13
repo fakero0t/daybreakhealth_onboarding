@@ -38,7 +38,7 @@ export default function EncouragementScreen() {
         <div className="max-w-2xl mx-auto text-center">
           {/* Success Icon */}
           <div className="mb-8">
-            <CheckCircleIcon className="w-20 h-20 text-green-500 mx-auto" aria-hidden="true" />
+            <CheckCircleIcon className="w-20 h-20 text-primary-500 mx-auto" aria-hidden="true" />
           </div>
 
           {/* Heading */}

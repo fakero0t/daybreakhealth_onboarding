@@ -4,11 +4,13 @@
 
 :root {
   --font-poppins: 'Poppins', sans-serif;
-  --font-open-sans: 'Open Sans', sans-serif;
+  --font-vollkorn: 'Vollkorn', serif;
 }
 
 body {
-  font-family: var(--font-open-sans);
+  font-family: var(--font-poppins);
+  background-color: #FDFBF8; /* Daybreak cream background */
+  color: #333333; /* Daybreak body text color */
 }
 
 /* Accessibility: Respect reduced motion preference */
@@ -31,7 +33,7 @@ body {
 
 /* Ensure focus indicators are visible */
 *:focus-visible {
-  outline: 2px solid theme('colors.primary.500');
+  outline: 2px solid #00A8CA; /* Daybreak teal */
   outline-offset: 2px;
 }
 

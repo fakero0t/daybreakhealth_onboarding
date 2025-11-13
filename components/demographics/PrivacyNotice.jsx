@@ -15,10 +15,10 @@ export default function PrivacyNotice({ onContinue }) {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl w-full text-center">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-heading font-bold text-primary-500 mb-4">
             Demographics Form
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-text-body">
             We'll ask a few questions to better understand your needs.
           </p>
         </div>
@@ -28,21 +28,21 @@ export default function PrivacyNotice({ onContinue }) {
             onClick={onContinue}
             className="
               px-8 py-3 text-base font-medium text-white
-              bg-blue-600 border border-transparent rounded-lg
-              hover:bg-blue-700 focus:outline-none focus:ring-2
-              focus:ring-offset-2 focus:ring-blue-500
-              transition-colors duration-200
+              bg-secondary-500 border border-transparent rounded-full
+              hover:bg-secondary-600 focus:outline-none focus:ring-2
+              focus:ring-offset-2 focus:ring-secondary-500
+              transition-all duration-200 shadow-sm hover:shadow-md
               mb-3
             "
           >
             Continue to Demographics Form
           </button>
           
-          <p className="text-[10px] text-gray-500">
+          <p className="text-[10px] text-text-secondary">
             All information is protected under HIPAA and kept confidential.{' '}
             <button
               onClick={() => setShowModal(true)}
-              className="text-blue-600 hover:text-blue-700 underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              className="text-primary-500 hover:text-primary-600 underline focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-full px-1"
             >
               View privacy details
             </button>
@@ -66,7 +66,7 @@ export default function PrivacyNotice({ onContinue }) {
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1"
+                className="text-neutral-400 hover:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-full p-1"
                 aria-label="Close modal"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,10 +136,10 @@ export default function PrivacyNotice({ onContinue }) {
             </ul>
           </section>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+            <p className="text-sm text-primary-900">
               <strong>Questions about privacy?</strong> Review our full{' '}
-              <a href="/privacy-policy" className="underline hover:text-blue-700">
+              <a href="/privacy-policy" className="underline hover:text-primary-700">
                 Privacy Policy
               </a>{' '}
               or contact us at privacy@daybreakhealth.com
@@ -147,15 +147,15 @@ export default function PrivacyNotice({ onContinue }) {
           </div>
         </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 flex justify-end">
+            <div className="sticky bottom-0 bg-neutral-50 border-t border-neutral-200 p-6 flex justify-end">
           <button
                 onClick={() => setShowModal(false)}
             className="
                   px-6 py-2 text-base font-medium text-white
-              bg-blue-600 border border-transparent rounded-lg
-              hover:bg-blue-700 focus:outline-none focus:ring-2
-              focus:ring-offset-2 focus:ring-blue-500
-              transition-colors duration-200
+              bg-secondary-500 border border-transparent rounded-full
+              hover:bg-secondary-600 focus:outline-none focus:ring-2
+              focus:ring-offset-2 focus:ring-secondary-500
+              transition-all duration-200 shadow-sm hover:shadow-md
             "
           >
                 Close

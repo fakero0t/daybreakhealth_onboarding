@@ -743,7 +743,7 @@ export default function IntakeSurvey() {
               value={currentAnswer}
               onChange={(e) => handleAnswerChange(currentQuestionData.id, e.target.value)}
               placeholder={currentQuestionData.placeholder}
-              className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none overflow-y-auto"
+              className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none overflow-y-auto bg-white shadow-sm"
               style={{ height: '200px', minHeight: '200px' }}
               aria-label={currentQuestionData.text}
               aria-describedby={`char-counter-${currentQuestionData.id} ${currentError ? `error-${currentQuestionData.id}` : ''}`}
