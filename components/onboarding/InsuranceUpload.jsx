@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import FileUpload from '@/components/shared/FileUpload'
@@ -14,7 +13,7 @@ import FAQChatbot from '@/components/shared/FAQChatbot'
  * Screen for uploading front of insurance card with validation and processing.
  */
 export default function InsuranceUpload() {
-  const { goToNextStep, goToPreviousStep, canGoPrevious } = useStepNavigation()
+  const { goToNextStep } = useStepNavigation()
   const { setInsuranceUploaded } = useOnboardingState()
   const [cardFile, setCardFile] = useState(null)
   const [cardError, setCardError] = useState(null)
@@ -49,22 +48,6 @@ export default function InsuranceUpload() {
   return (
     <main className="min-h-screen bg-background-muted-teal" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-        {/* Back Button */}
-        {canGoPrevious && (
-          <div className="mb-6">
-            <Button
-              onClick={goToPreviousStep}
-              variant="text"
-              size="medium"
-              ariaLabel="Go back to previous step"
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-              Back
-            </Button>
-          </div>
-        )}
-
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">

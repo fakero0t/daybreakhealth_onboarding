@@ -258,8 +258,8 @@ export default function DemographicsWizard({
     : ['guardian_information', 'education', 'developmental_history', 'life_changes'];
 
   return (
-    <div className="min-h-screen bg-background-cream">
-      <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background-cream flex items-center">
+      <div className="max-w-3xl mx-auto px-4 py-8 w-full">
         <ProgressIndicator
           currentStep={currentStep}
           totalSteps={PAGES.length}
@@ -296,7 +296,7 @@ export default function DemographicsWizard({
           onContinue={handleSaveAndContinue}
           onBack={handleBack}
           onSkip={handleSkip}
-          showBack={currentStep > 1}
+          showBack={false}
           showSkip={true}
           isLoading={isLoading}
           isLastStep={currentStep === PAGES.length}

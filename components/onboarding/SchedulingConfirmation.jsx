@@ -60,26 +60,15 @@ export default function SchedulingConfirmation({ selectedSlot, onConfirm, onBack
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex justify-center">
         <Button
           variant="primary"
           size="large"
           onClick={handleConfirm}
           onKeyDown={handleKeyDown}
           ariaLabel="Confirm appointment preference"
-          className="flex-1 sm:flex-none"
         >
           Confirm Appointment
-        </Button>
-        
-        <Button
-          variant="outline"
-          size="large"
-          onClick={onBack}
-          ariaLabel="Go back to results"
-          className="flex-1 sm:flex-none"
-        >
-          Back
         </Button>
       </div>
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import Button from '@/components/shared/Button'
@@ -53,7 +52,7 @@ const QUESTIONS = [
  * Questions are answered sequentially with validation and auto-save.
  */
 export default function IntakeSurvey() {
-  const { goToNextStep, goToPreviousStep, currentStep, canGoPrevious } = useStepNavigation()
+  const { goToNextStep, currentStep } = useStepNavigation()
   const { extractedSymptoms, setExtractedSymptoms, setExtractionMetadata, extractionMetadata } = useOnboardingState()
   const [showIntro, setShowIntro] = useState(true)
   const [currentQuestion, setCurrentQuestion] = useState(1) // 1-5
@@ -499,22 +498,6 @@ export default function IntakeSurvey() {
     return (
       <main className="min-h-screen bg-background-cream" role="main">
         <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-          {/* Back Button */}
-          {canGoPrevious && (
-            <div className="mb-6">
-              <Button
-                onClick={goToPreviousStep}
-                variant="text"
-                size="medium"
-                ariaLabel="Go back to previous step"
-                className="flex items-center gap-2"
-              >
-                <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-                Back
-              </Button>
-            </div>
-          )}
-
           {/* Skip link */}
           <a
             href="#symptom-review-summary"
@@ -540,22 +523,6 @@ export default function IntakeSurvey() {
     return (
       <main className="min-h-screen bg-background-cream" role="main">
         <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-          {/* Back Button */}
-          {canGoPrevious && (
-            <div className="mb-6">
-              <Button
-                onClick={goToPreviousStep}
-                variant="text"
-                size="medium"
-                ariaLabel="Go back to previous step"
-                className="flex items-center gap-2"
-              >
-                <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-                Back
-              </Button>
-            </div>
-          )}
-
           <div className="max-w-3xl mx-auto text-center">
             {/* Spinner */}
             <div className="mb-8">
@@ -644,22 +611,6 @@ export default function IntakeSurvey() {
     return (
       <main className="min-h-screen bg-background-cream flex items-center justify-center p-4" role="main">
         <div className="w-full max-w-2xl text-center">
-          {/* Back Button */}
-          {canGoPrevious && (
-            <div className="mb-8 flex justify-start">
-              <Button
-                onClick={goToPreviousStep}
-                variant="text"
-                size="medium"
-                ariaLabel="Go back to previous step"
-                className="flex items-center gap-2"
-              >
-                <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-                Back
-              </Button>
-            </div>
-          )}
-
           {/* Intro Screen */}
           <div className="mb-8">
             <h1 className="text-4xl font-heading font-bold text-primary-500 mb-4">
@@ -686,22 +637,6 @@ export default function IntakeSurvey() {
   return (
     <main className="min-h-screen bg-background-cream" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-        {/* Back Button */}
-        {canGoPrevious && (
-          <div className="mb-6">
-            <Button
-              onClick={goToPreviousStep}
-              variant="text"
-              size="medium"
-              ariaLabel="Go back to previous step"
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-              Back
-            </Button>
-          </div>
-        )}
-
         {/* Skip link */}
         <a
           href={`#question-text-${currentQuestionData.id}`}

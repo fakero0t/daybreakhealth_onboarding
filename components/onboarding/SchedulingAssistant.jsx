@@ -1,12 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
-import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import { detectUserTimezone } from '@/lib/utils/timezone-utils'
-import Button from '@/components/shared/Button'
 import FAQChatbot from '@/components/shared/FAQChatbot'
 import NaturalLanguageScheduling from './NaturalLanguageScheduling'
 import AvailabilityResults from './AvailabilityResults'
@@ -27,7 +24,6 @@ const PHASES = {
  * Natural language scheduling interface with AI-powered interpretation and matching.
  */
 export default function SchedulingAssistant() {
-  const { goToPreviousStep, canGoPrevious } = useStepNavigation()
   const {
     schedulingInput,
     interpretedPreferences,
@@ -174,22 +170,6 @@ export default function SchedulingAssistant() {
   return (
     <main className="min-h-screen bg-background-cream" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-        {/* Back Button */}
-        {canGoPrevious && (
-          <div className="mb-6">
-            <Button
-              onClick={goToPreviousStep}
-              variant="text"
-              size="medium"
-              ariaLabel="Go back to previous step"
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="w-5 h-5" aria-hidden="true" />
-              Back
-            </Button>
-          </div>
-        )}
-
         {/* Show checkmark circle when confirmed, otherwise show normal flow */}
         {isConfirmed ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">

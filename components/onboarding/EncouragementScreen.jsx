@@ -12,7 +12,7 @@ import Button from '@/components/shared/Button'
  * Encourages users to continue and lets them know they're making progress.
  */
 export default function EncouragementScreen() {
-  const { goToStep, canGoPrevious, goToPreviousStep } = useStepNavigation()
+  const { goToStep } = useStepNavigation()
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
 
   // Navigate to Insurance Upload (step 6)
@@ -23,24 +23,6 @@ export default function EncouragementScreen() {
   return (
     <main className="min-h-screen bg-background-cream" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
-        {/* Back Button */}
-        {canGoPrevious && (
-          <div className="mb-6">
-            <Button
-              onClick={goToPreviousStep}
-              variant="text"
-              size="medium"
-              ariaLabel="Go back to previous step"
-              className="flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back
-            </Button>
-          </div>
-        )}
-
         {/* Main Content */}
         <div className="max-w-2xl mx-auto text-center">
           {/* Success Icon */}
