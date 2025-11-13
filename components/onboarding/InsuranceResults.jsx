@@ -98,7 +98,7 @@ export default function InsuranceResults() {
             )}
             {statusType === 'invalid' && (
               <p className="text-base text-text-body">
-                We couldn't verify your insurance information. You can still proceed with your appointment.
+                We couldn&apos;t verify your insurance information. You can still proceed with your appointment.
               </p>
             )}
           </div>

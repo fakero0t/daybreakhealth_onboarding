@@ -47,11 +47,21 @@ export async function POST(request) {
     try {
       matchingResult = await matchInsurance(insurance_company_name, state)
     } catch (error) {
-      console.error('Error matching insurance:', error)
-      return NextResponse.json(
-        { error: 'Unable to validate insurance. Please try again.' },
-        { status: 500 }
-      )
+      console.error('Error matching insurance:', {
+        error: error.message,
+        stack: error.stack,
+        insuranceName: insurance_company_name?.substring(0, 50), // Log first 50 chars only
+        state: state
+      })
+      
+      // Return a response that allows user to proceed
+      return NextResponse.json({
+        is_valid_insurance: false,
+        matched_insurance: null,
+        is_in_network: false,
+        message: 'Unable to validate insurance. You can still proceed.',
+        confidence: 'low'
+      })
     }
 
     // Determine validation status

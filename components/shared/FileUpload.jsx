@@ -198,6 +198,7 @@ export default function FileUpload({
           <div className="border-2 border-neutral-300 rounded-lg p-4 bg-neutral-50">
             {isImage ? (
               <div className="flex items-center gap-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={URL.createObjectURL(preview)}
                   alt={`Preview of ${preview.name}`}

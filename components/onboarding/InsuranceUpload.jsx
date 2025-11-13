@@ -448,9 +448,9 @@ export default function InsuranceUpload() {
               onClick={handleExtract}
               variant="primary"
               size="large"
-              ariaLabel="Extract insurance information"
+              ariaLabel="Continue"
             >
-              Extract Information
+              Continue
             </Button>
           )}
           {isExtracting && (
@@ -459,20 +459,17 @@ export default function InsuranceUpload() {
               <span className="text-text-body">Analyzing card...</span>
             </div>
           )}
-        </div>
-
-        {/* Submit Button - always available */}
-        <div className="flex justify-center mb-8">
-          <Button
-            type="button"
-            onClick={handleSubmit}
-            variant={extractedData ? "primary" : "secondary"}
-            size="large"
-            ariaLabel="Continue to next step"
-            disabled={isExtracting}
-          >
-            Continue
-          </Button>
+          {!cardFile && (
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              variant="primary"
+              size="large"
+              ariaLabel="Continue to next step"
+            >
+              Continue
+            </Button>
+          )}
         </div>
 
         {/* Help Text */}

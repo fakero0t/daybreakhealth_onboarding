@@ -248,21 +248,23 @@ export default function SchedulingAssistant() {
               )}
             </section>
 
-            {/* Help Section */}
-            <section aria-labelledby="help-heading" className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
-              <h2 id="help-heading" className="text-lg font-semibold text-primary-900 mb-3">
-                Need Help?
-              </h2>
-              <p className="text-base text-primary-800 mb-4">
-                You can describe your availability in any way that works for you. For example:
-              </p>
-              <ul className="list-disc list-inside text-base text-primary-800 space-y-2">
-                <li>&quot;I&apos;m only free on weekdays after 5pm&quot;</li>
-                <li>&quot;I can do an appointment between 9am and 11am next Tuesday and Thursday&quot;</li>
-                <li>&quot;Weekends in the morning&quot;</li>
-                <li>&quot;Next week, any day after 2pm&quot;</li>
-              </ul>
-            </section>
+            {/* Help Section - Only show during input phase */}
+            {phase === PHASES.INPUT && (
+              <section aria-labelledby="help-heading" className="bg-primary-50 border border-primary-200 rounded-lg p-6 mb-8">
+                <h2 id="help-heading" className="text-lg font-semibold text-primary-900 mb-3">
+                  Need Help?
+                </h2>
+                <p className="text-base text-primary-800 mb-4">
+                  You can describe your availability in any way that works for you. For example:
+                </p>
+                <ul className="list-disc list-inside text-base text-primary-800 space-y-2">
+                  <li>&quot;I&apos;m only free on weekdays after 5pm&quot;</li>
+                  <li>&quot;I can do an appointment between 9am and 11am next Tuesday and Thursday&quot;</li>
+                  <li>&quot;Weekends in the morning&quot;</li>
+                  <li>&quot;Next week, any day after 2pm&quot;</li>
+                </ul>
+              </section>
+            )}
           </>
         )}
       </div>
