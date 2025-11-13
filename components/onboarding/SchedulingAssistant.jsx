@@ -6,7 +6,6 @@ import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import { detectUserTimezone } from '@/lib/utils/timezone-utils'
 import Button from '@/components/shared/Button'
-import ProgressIndicator from '@/components/shared/ProgressIndicator'
 import FAQChatbot from '@/components/shared/FAQChatbot'
 import NaturalLanguageScheduling from './NaturalLanguageScheduling'
 import AvailabilityResults from './AvailabilityResults'
@@ -180,22 +179,13 @@ export default function SchedulingAssistant() {
           </div>
         )}
 
-        {/* Progress Indicator */}
-        <div className="mb-8">
-          <ProgressIndicator
-            currentStep={5}
-            totalSteps={5}
-            percentage={100}
-          />
-        </div>
-
         {/* Page Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
-            Schedule Your First Appointment
+            Schedule Appointment
           </h1>
           <p className="text-base sm:text-lg text-text-body">
-            Tell us when you&apos;re available, and we&apos;ll find the best appointment times for you.
+            When are you available?
           </p>
         </div>
 
@@ -220,7 +210,7 @@ export default function SchedulingAssistant() {
             <div className="text-center py-12" role="status" aria-live="polite">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
               <p className="text-base text-text-body">
-                Understanding your availability...
+                Processing...
               </p>
                 </div>
           )}
@@ -229,7 +219,7 @@ export default function SchedulingAssistant() {
             <div className="text-center py-12" role="status" aria-live="polite">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mb-4" />
               <p className="text-base text-text-body">
-                Finding available appointments...
+                Finding appointments...
               </p>
               </div>
           )}

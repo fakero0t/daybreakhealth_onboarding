@@ -23,13 +23,17 @@ import ActivitiesPage from './pages/ActivitiesPage';
 // API
 import { getDemographics, saveDemographics } from '@/lib/api/demographics-client';
 
-const PAGES = [
-  { id: 'basic_information', name: 'Basic Information', component: BasicInformationPage },
+// First demographics flow - Basic Information only
+const PAGES_PART_1 = [
+  { id: 'basic_information', name: 'Basic Information', component: BasicInformationPage }
+];
+
+// Second demographics flow - Remaining pages (Activities removed)
+const PAGES_PART_2 = [
   { id: 'guardian_information', name: 'Guardian Information', component: GuardianInformationPage },
   { id: 'education', name: 'Education', component: EducationPage },
   { id: 'developmental_history', name: 'Developmental History', component: DevelopmentalHistoryPage },
-  { id: 'life_changes', name: 'Life Changes', component: LifeChangesPage },
-  { id: 'activities', name: 'Activities', component: ActivitiesPage }
+  { id: 'life_changes', name: 'Life Changes', component: LifeChangesPage }
 ];
 
 const AUTO_SAVE_DELAY = 30000; // 30 seconds
@@ -37,8 +41,11 @@ const AUTO_SAVE_DELAY = 30000; // 30 seconds
 export default function DemographicsWizard({ 
   patientId,
   onComplete,
-  onSkipAll 
+  onSkipAll,
+  part = 1 // 1 for Basic Info only, 2 for remaining pages
 }) {
+  // Select which pages to show based on part
+  const PAGES = part === 1 ? PAGES_PART_1 : PAGES_PART_2;
   const [showPrivacyNotice, setShowPrivacyNotice] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
@@ -51,78 +58,85 @@ export default function DemographicsWizard({
   const autoSaveTimerRef = useRef(null);
   const lastDataRef = useRef(formData);
 
-  // Load existing demographics on mount
+  // Load existing demographics on mount (DISABLED - not saving to backend for now)
   useEffect(() => {
-    const loadExistingData = async () => {
-      try {
-        const existing = await getDemographics(patientId);
-        if (existing) {
-          setFormData(existing);
-          setSectionsCompleted(existing.sections_completed || []);
-          setLastSaved(existing.updated_at);
-          
-          // Jump to first incomplete section if resuming
-          const firstIncompleteIndex = PAGES.findIndex(
-            page => !existing.sections_completed?.includes(page.id)
-          );
-          if (firstIncompleteIndex !== -1 && firstIncompleteIndex > 0) {
-            setCurrentStep(firstIncompleteIndex + 1);
-          }
-        }
-        setHasLoaded(true);
-      } catch (error) {
-        console.error('Error loading demographics:', error);
-        setHasLoaded(true);
-      }
-    };
+    // Backend integration disabled - just mark as loaded
+    setHasLoaded(true);
+    
+    // Note: When backend is needed, uncomment below:
+    // const loadExistingData = async () => {
+    //   try {
+    //     const existing = await getDemographics(patientId);
+    //     if (existing) {
+    //       setFormData(existing);
+    //       setSectionsCompleted(existing.sections_completed || []);
+    //       setLastSaved(existing.updated_at);
+    //       
+    //       // Jump to first incomplete section if resuming
+    //       const firstIncompleteIndex = PAGES.findIndex(
+    //         page => !existing.sections_completed?.includes(page.id)
+    //       );
+    //       if (firstIncompleteIndex !== -1 && firstIncompleteIndex > 0) {
+    //         setCurrentStep(firstIncompleteIndex + 1);
+    //       }
+    //     }
+    //     setHasLoaded(true);
+    //   } catch (error) {
+    //     console.error('Error loading demographics:', error);
+    //     setHasLoaded(true);
+    //   }
+    // };
+    // if (patientId && !hasLoaded) {
+    //   loadExistingData();
+    // }
+  }, [hasLoaded]);
 
-    if (patientId && !hasLoaded) {
-      loadExistingData();
-    }
-  }, [patientId, hasLoaded]);
-
-  // Auto-save when data changes
+  // Auto-save when data changes (DISABLED - not saving to backend for now)
   useEffect(() => {
-    // Clear existing timer
-    if (autoSaveTimerRef.current) {
-      clearTimeout(autoSaveTimerRef.current);
-    }
-
-    // Only auto-save if data has changed and we're not showing privacy notice
-    if (!showPrivacyNotice && hasLoaded && formData !== lastDataRef.current) {
-      autoSaveTimerRef.current = setTimeout(() => {
-        handleAutoSave();
-      }, AUTO_SAVE_DELAY);
-    }
-
-    return () => {
-      if (autoSaveTimerRef.current) {
-        clearTimeout(autoSaveTimerRef.current);
-      }
-    };
+    // Backend integration disabled - auto-save is skipped
+    
+    // Note: When backend is needed, uncomment below:
+    // // Clear existing timer
+    // if (autoSaveTimerRef.current) {
+    //   clearTimeout(autoSaveTimerRef.current);
+    // }
+    // // Only auto-save if data has changed and we're not showing privacy notice
+    // if (!showPrivacyNotice && hasLoaded && formData !== lastDataRef.current) {
+    //   autoSaveTimerRef.current = setTimeout(() => {
+    //     handleAutoSave();
+    //   }, AUTO_SAVE_DELAY);
+    // }
+    // return () => {
+    //   if (autoSaveTimerRef.current) {
+    //     clearTimeout(autoSaveTimerRef.current);
+    //   }
+    // };
   }, [formData, showPrivacyNotice, hasLoaded]);
 
   const handleAutoSave = useCallback(async () => {
-    if (!patientId) return;
-
-    try {
-      setAutoSaveStatus('saving');
-      await saveDemographics(patientId, {
-        ...formData,
-        sections_completed: sectionsCompleted
-      }, true); // isPartial = true for auto-save
-      
-      setAutoSaveStatus('saved');
-      setLastSaved(new Date().toISOString());
-      lastDataRef.current = formData;
-      
-      // Reset to idle after 3 seconds
-      setTimeout(() => setAutoSaveStatus('idle'), 3000);
-    } catch (error) {
-      console.error('Auto-save error:', error);
-      setAutoSaveStatus('error');
-    }
-  }, [patientId, formData, sectionsCompleted]);
+    // Backend integration disabled - no auto-save
+    console.log('Auto-save skipped (backend disabled)');
+    
+    // Note: When backend is needed, uncomment below:
+    // if (!patientId) return;
+    // try {
+    //   setAutoSaveStatus('saving');
+    //   await saveDemographics(patientId, {
+    //     ...formData,
+    //     sections_completed: sectionsCompleted
+    //   }, true); // isPartial = true for auto-save
+    //   
+    //   setAutoSaveStatus('saved');
+    //   setLastSaved(new Date().toISOString());
+    //   lastDataRef.current = formData;
+    //   
+    //   // Reset to idle after 3 seconds
+    //   setTimeout(() => setAutoSaveStatus('idle'), 3000);
+    // } catch (error) {
+    //   console.error('Auto-save error:', error);
+    //   setAutoSaveStatus('error');
+    // }
+  }, []);
 
   const handleSaveAndContinue = async () => {
     setIsLoading(true);
@@ -132,16 +146,20 @@ export default function DemographicsWizard({
       const updatedSections = [...new Set([...sectionsCompleted, currentPage.id])];
       setSectionsCompleted(updatedSections);
 
-      // Save current state
+      // Prepare data (but don't save to backend for now)
       const dataToSave = {
         ...formData,
         sections_completed: updatedSections,
         completed: currentStep === PAGES.length
       };
 
-      await saveDemographics(patientId, dataToSave, false);
-      setLastSaved(new Date().toISOString());
-      lastDataRef.current = formData;
+      // Backend integration disabled - skip save
+      console.log('Save skipped (backend disabled). Data:', dataToSave);
+      
+      // Note: When backend is needed, uncomment below:
+      // await saveDemographics(patientId, dataToSave, false);
+      // setLastSaved(new Date().toISOString());
+      // lastDataRef.current = formData;
 
       // Move to next page or complete
       if (currentStep < PAGES.length) {
@@ -234,6 +252,11 @@ export default function DemographicsWizard({
   const CurrentPageComponent = PAGES[currentStep - 1].component;
   const currentPageName = PAGES[currentStep - 1].name;
 
+  // Get section IDs for the current part
+  const sectionsToShow = part === 1 
+    ? ['basic_information']
+    : ['guardian_information', 'education', 'developmental_history', 'life_changes'];
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <ProgressIndicator
@@ -241,14 +264,19 @@ export default function DemographicsWizard({
         totalSteps={PAGES.length}
         sectionName={currentPageName}
         sectionsCompleted={sectionsCompleted}
+        showSectionPills={part !== 1}
+        showProgressBar={part !== 1}
+        customTitle={part === 2 ? "Additional Information" : null}
+        sectionsToShow={sectionsToShow}
       />
 
       <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-8">
-        <AutoSaveIndicator
+        {/* Auto-save indicator hidden (backend disabled) */}
+        {/* <AutoSaveIndicator
           status={autoSaveStatus}
           lastSaved={lastSaved}
           onRetry={handleRetryAutoSave}
-        />
+        /> */}
 
         <CurrentPageComponent
           data={formData}

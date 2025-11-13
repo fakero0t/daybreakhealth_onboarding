@@ -10,11 +10,15 @@ export default function ProgressIndicator({
   currentStep, 
   totalSteps, 
   sectionName,
-  sectionsCompleted = []
+  sectionsCompleted = [],
+  showSectionPills = true,
+  showProgressBar = true,
+  customTitle = null,
+  sectionsToShow = null // Array of section IDs to show. If null, shows all sections.
 }) {
   const percentage = ((currentStep) / totalSteps) * 100;
 
-  const sections = [
+  const allSections = [
     { id: 'basic_information', name: 'Basic Info' },
     { id: 'guardian_information', name: 'Guardian Info' },
     { id: 'education', name: 'Education' },
@@ -22,6 +26,11 @@ export default function ProgressIndicator({
     { id: 'life_changes', name: 'Life Changes' },
     { id: 'activities', name: 'Activities' }
   ];
+
+  // Filter sections based on sectionsToShow prop
+  const sections = sectionsToShow 
+    ? allSections.filter(section => sectionsToShow.includes(section.id))
+    : allSections;
 
   return (
     <div className="w-full mb-6" role="progressbar" aria-valuenow={currentStep} aria-valuemin="1" aria-valuemax={totalSteps}>
@@ -31,7 +40,7 @@ export default function ProgressIndicator({
             Step {currentStep} of {totalSteps}
           </p>
           <p className="text-lg font-semibold text-gray-900">
-            Demographics - {sectionName}
+            {customTitle || `Demographics - ${sectionName}`}
           </p>
         </div>
         <div className="text-sm text-gray-500">
@@ -40,41 +49,45 @@ export default function ProgressIndicator({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-        <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
+      {showProgressBar && (
+        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+          <div
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+      )}
 
       {/* Section Pills */}
-      <div className="flex flex-wrap gap-2 mt-4">
-        {sections.map((section, index) => {
-          const isCompleted = sectionsCompleted.includes(section.id);
-          const isCurrent = index + 1 === currentStep;
+      {showSectionPills && (
+        <div className="flex items-center justify-center gap-2 mt-4">
+          {sections.map((section, index) => {
+            const isCompleted = sectionsCompleted.includes(section.id);
+            const isCurrent = index + 1 === currentStep;
 
-          return (
-            <div
-              key={section.id}
-              className={`
-                px-3 py-1 rounded-full text-xs font-medium
-                transition-colors duration-200
-                ${isCurrent 
-                  ? 'bg-blue-600 text-white' 
-                  : isCompleted 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-gray-100 text-gray-600'
-                }
-              `}
-            >
-              {isCompleted && !isCurrent && (
-                <span className="mr-1" aria-label="Completed">✓</span>
-              )}
-              {section.name}
-            </div>
-          );
-        })}
-      </div>
+            return (
+              <div
+                key={section.id}
+                className={`
+                  px-3 py-1 rounded-full text-xs font-medium
+                  transition-colors duration-200
+                  ${isCurrent 
+                    ? 'bg-blue-600 text-white' 
+                    : isCompleted 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-gray-100 text-gray-600'
+                  }
+                `}
+              >
+                {isCompleted && !isCurrent && (
+                  <span className="mr-1" aria-label="Completed">✓</span>
+                )}
+                {section.name}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -21,6 +21,7 @@ export default function ProgressIndicator({
   label = 'Step',
   subtle = false,
   className = '',
+  skipSteps = [], // Array of step numbers to skip in the visual display
 }) {
   // Ensure percentage is between 0 and 100
   const clampedPercentage = Math.min(Math.max(percentage || 0, 0), 100)
@@ -49,7 +50,7 @@ export default function ProgressIndicator({
       aria-label={`${label} ${currentStep} of ${totalSteps}`}
     >
       {/* Step text */}
-      <div className={`flex justify-between items-center mb-2 ${textColor}`}>
+      <div className={`flex justify-between items-center mb-3 ${textColor}`}>
         <span className="text-sm font-medium">
           {label} {currentStep} of {totalSteps}
         </span>
@@ -58,22 +59,48 @@ export default function ProgressIndicator({
         </span>
       </div>
 
-      {/* Progress bar */}
-      <div
-        className={`w-full h-2 rounded-full overflow-hidden ${progressBarBg}`}
-        role="progressbar"
-        aria-valuenow={calculatedPercentage}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`${calculatedPercentage}% complete`}
-      >
-        <div
-          className={`h-full transition-all duration-slow ease-out ${progressBarFill}`}
-          style={{ 
-            width: `${calculatedPercentage}%`,
-            transition: 'width 300ms ease-out'
-          }}
-        />
+      {/* Step Pills */}
+      <div className="flex items-center justify-center gap-2">
+        {Array.from({ length: totalSteps }, (_, index) => {
+          const stepNumber = index + 1;
+          
+          // Skip steps that shouldn't be shown
+          if (skipSteps.includes(stepNumber)) {
+            return null;
+          }
+          
+          const isCompleted = stepNumber < currentStep;
+          const isCurrent = stepNumber === currentStep;
+          
+          // Check if this is the last visible step
+          const visibleSteps = Array.from({ length: totalSteps }, (_, i) => i + 1)
+            .filter(step => !skipSteps.includes(step));
+          const isLastVisibleStep = stepNumber === visibleSteps[visibleSteps.length - 1];
+          
+          return (
+            <div key={stepNumber} className="flex items-center">
+              <div
+                className={`
+                  w-8 h-8 rounded-full flex items-center justify-center
+                  text-xs font-medium transition-colors duration-200
+                  ${isCurrent 
+                    ? 'bg-blue-600 text-white' 
+                    : isCompleted 
+                      ? 'bg-green-500 text-white' 
+                      : 'bg-gray-200 text-gray-600'
+                  }
+                `}
+              >
+                {isCompleted ? '✓' : stepNumber}
+              </div>
+              {!isLastVisibleStep && (
+                <div 
+                  className={`w-4 h-0.5 ${isCompleted ? 'bg-green-500' : 'bg-gray-300'}`}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   )

@@ -5,13 +5,12 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import Button from '@/components/shared/Button'
-import ProgressIndicator from '@/components/shared/ProgressIndicator'
 import CharacterCounter from '@/components/shared/CharacterCounter'
 import SymptomReviewForm from '@/components/onboarding/SymptomReviewForm'
 import { saveToLocalStorage, loadFromLocalStorage, removeFromLocalStorage, isLocalStorageAvailable } from '@/lib/utils/localStorage'
 import { logQuestionTime, logRetry, logSymptomEdit, logFormCompletion } from '@/lib/utils/analytics'
 
-// Narrative answers are NOT persisted to localStorage
+// Narrative answers are NOT persisted to sessionStorage
 // They only exist in component state during the current session
 
 const QUESTIONS = [
@@ -78,15 +77,15 @@ export default function IntakeSurvey() {
   const questionStartTimeRef = useRef(null)
   const extractionStartTimeRef = useRef(null)
 
-  // Detect localStorage support on mount
+  // Detect sessionStorage support on mount
   useEffect(() => {
     if (!isLocalStorageAvailable()) {
       setLocalStorageWarning(true)
-      console.warn('localStorage is not available. Continuing with in-memory storage only.')
+      console.warn('sessionStorage is not available. Continuing with in-memory storage only.')
     }
   }, [])
 
-  // Narrative answers are NOT persisted to localStorage
+  // Narrative answers are NOT persisted to sessionStorage
   // Users always start with a fresh question list
 
   // Track question time - start timer on question load
@@ -105,7 +104,7 @@ export default function IntakeSurvey() {
     }
   }, [])
 
-  // Narrative answers are NOT persisted to localStorage
+  // Narrative answers are NOT persisted to sessionStorage
   // They only exist in component state during the current session
 
   // Track unsaved changes
@@ -542,16 +541,6 @@ export default function IntakeSurvey() {
             Skip to symptom review
           </a>
 
-          {/* Progress Indicator */}
-          <div className="mb-8">
-            <ProgressIndicator
-              currentStep={currentStep}
-              totalSteps={5}
-              percentage={(currentStep / 5) * 100}
-              label="Step"
-            />
-          </div>
-
           {/* Review Form */}
           <SymptomReviewForm
             extractedSymptoms={extractedSymptoms}
@@ -626,16 +615,6 @@ export default function IntakeSurvey() {
                 {extractionStep === 'finalizing' ? '✓' : '○'} Finalizing...
               </div>
             </div>
-
-            {/* Progress Indicator */}
-            <div className="mb-8">
-              <ProgressIndicator
-                currentStep={currentStep}
-                totalSteps={5}
-                percentage={(currentStep / 5) * 100}
-                label="Question"
-              />
-            </div>
           </div>
 
             {/* ARIA live region for screen readers */}
@@ -671,16 +650,6 @@ export default function IntakeSurvey() {
           )}
 
           <div className="max-w-3xl mx-auto">
-            {/* Progress Indicator */}
-            <div className="mb-8">
-              <ProgressIndicator
-                currentStep={currentStep}
-                totalSteps={5}
-                percentage={(currentStep / 5) * 100}
-                label="Question"
-              />
-            </div>
-
             {/* Error message */}
             <div className="mb-6 p-6 bg-red-50 border border-red-200 rounded-lg" role="alert">
               <p className="text-base text-red-800 font-medium mb-2">
@@ -749,16 +718,6 @@ export default function IntakeSurvey() {
             <p>Note: Your browser&apos;s storage is unavailable or full. Your progress will not be saved if you close this page.</p>
           </div>
         )}
-
-        {/* Progress Indicator */}
-        <div className="mb-8">
-          <ProgressIndicator
-            currentStep={currentStep}
-            totalSteps={5}
-            percentage={(currentStep / 5) * 100}
-            label="Step"
-          />
-        </div>
 
         {/* Question Screen UI */}
         <div className="max-w-3xl mx-auto">

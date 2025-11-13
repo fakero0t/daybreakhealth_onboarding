@@ -51,8 +51,8 @@ export function OnboardingProvider({ children }) {
 
   // Validate and sanitize state
   const validateState = useCallback((state) => {
-    // Validate currentStep (must be 1-5)
-    const step = typeof state.currentStep === 'number' && !isNaN(state.currentStep) && state.currentStep >= 1 && state.currentStep <= 5
+    // Validate currentStep (must be 1-8)
+    const step = typeof state.currentStep === 'number' && !isNaN(state.currentStep) && state.currentStep >= 1 && state.currentStep <= 8
       ? state.currentStep
       : 1
 
@@ -138,15 +138,15 @@ export function OnboardingProvider({ children }) {
     }
   }, [])
 
-  // Load state from localStorage on mount
+  // Load state from sessionStorage on mount
   useEffect(() => {
     try {
-      // Check URL step parameter first (takes precedence over localStorage)
+      // Check URL step parameter first (takes precedence over sessionStorage)
       let initialStep = 1
       if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search)
         const stepFromUrl = parseInt(urlParams.get('step') || '0', 10)
-        if (stepFromUrl >= 1 && stepFromUrl <= 5) {
+        if (stepFromUrl >= 1 && stepFromUrl <= 8) {
           initialStep = stepFromUrl
         }
       }
@@ -199,78 +199,78 @@ export function OnboardingProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Save state to localStorage whenever it changes
+  // Save state to sessionStorage whenever it changes
   useEffect(() => {
     if (!isInitialized) return
 
     try {
       const saved = saveToLocalStorage(STORAGE_KEYS.CURRENT_STEP, state.currentStep)
       if (!saved) {
-        console.warn('Unable to save currentStep to localStorage. Continuing with in-memory storage only.')
+        console.warn('Unable to save currentStep to sessionStorage. Continuing with in-memory storage only.')
       }
     } catch (error) {
-      console.warn('Error saving currentStep to localStorage:', error)
+      console.warn('Error saving currentStep to sessionStorage:', error)
     }
 
     try {
       const saved = saveToLocalStorage(STORAGE_KEYS.EXTRACTED_SYMPTOMS, state.extractedSymptoms)
       if (!saved) {
-        console.warn('Unable to save extractedSymptoms to localStorage. Continuing with in-memory storage only.')
+        console.warn('Unable to save extractedSymptoms to sessionStorage. Continuing with in-memory storage only.')
       }
     } catch (error) {
-      console.warn('Error saving extractedSymptoms to localStorage:', error)
+      console.warn('Error saving extractedSymptoms to sessionStorage:', error)
     }
 
     try {
       const saved = saveToLocalStorage(STORAGE_KEYS.EXTRACTION_METADATA, state.extractionMetadata)
       if (!saved) {
-        console.warn('Unable to save extractionMetadata to localStorage. Continuing with in-memory storage only.')
+        console.warn('Unable to save extractionMetadata to sessionStorage. Continuing with in-memory storage only.')
       }
     } catch (error) {
-      console.warn('Error saving extractionMetadata to localStorage:', error)
+      console.warn('Error saving extractionMetadata to sessionStorage:', error)
     }
 
     try {
       saveToLocalStorage(STORAGE_KEYS.INSURANCE_UPLOADED, state.insuranceUploaded)
     } catch (error) {
-      console.warn('Error saving insuranceUploaded to localStorage:', error)
+      console.warn('Error saving insuranceUploaded to sessionStorage:', error)
     }
 
     try {
       saveToLocalStorage(STORAGE_KEYS.FAQ_OPEN, state.faqOpen)
     } catch (error) {
-      console.warn('Error saving faqOpen to localStorage:', error)
+      console.warn('Error saving faqOpen to sessionStorage:', error)
     }
 
     try {
       saveToLocalStorage(STORAGE_KEYS.SCHEDULING_INPUT, state.schedulingInput)
     } catch (error) {
-      console.warn('Error saving schedulingInput to localStorage:', error)
+      console.warn('Error saving schedulingInput to sessionStorage:', error)
     }
 
     try {
       saveToLocalStorage(STORAGE_KEYS.INTERPRETED_PREFERENCES, state.interpretedPreferences)
     } catch (error) {
-      console.warn('Error saving interpretedPreferences to localStorage:', error)
+      console.warn('Error saving interpretedPreferences to sessionStorage:', error)
     }
 
     try {
       saveToLocalStorage(STORAGE_KEYS.MATCHED_SLOTS, state.matchedSlots)
     } catch (error) {
-      console.warn('Error saving matchedSlots to localStorage:', error)
+      console.warn('Error saving matchedSlots to sessionStorage:', error)
     }
 
     try {
       saveToLocalStorage(STORAGE_KEYS.SELECTED_SLOT, state.selectedSlot)
     } catch (error) {
-      console.warn('Error saving selectedSlot to localStorage:', error)
+      console.warn('Error saving selectedSlot to sessionStorage:', error)
     }
   }, [state, isInitialized])
 
   // Update current step
   const setCurrentStep = useCallback((step) => {
     // Validate step before setting
-    const validStep = typeof step === 'number' && !isNaN(step) && step >= 1 && step <= 5
+    const validStep = typeof step === 'number' && !isNaN(step) && step >= 1 && step <= 8
       ? step
       : 1
 
@@ -404,7 +404,7 @@ export function OnboardingProvider({ children }) {
         // Parse step from URL if state doesn't have it
         const urlParams = new URLSearchParams(window.location.search)
         const step = parseInt(urlParams.get('step') || '1', 10)
-        if (step >= 1 && step <= 5) {
+        if (step >= 1 && step <= 8) {
           setState(prev => ({ ...prev, currentStep: step }))
         }
       }
@@ -421,7 +421,7 @@ export function OnboardingProvider({ children }) {
     const urlParams = new URLSearchParams(window.location.search)
     const stepFromUrl = parseInt(urlParams.get('step') || state.currentStep.toString(), 10)
     
-    if (stepFromUrl >= 1 && stepFromUrl <= 5 && stepFromUrl !== state.currentStep) {
+    if (stepFromUrl >= 1 && stepFromUrl <= 8 && stepFromUrl !== state.currentStep) {
       setState(prev => ({ ...prev, currentStep: stepFromUrl }))
     } else {
       // Update URL to match current step

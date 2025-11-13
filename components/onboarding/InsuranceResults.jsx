@@ -4,7 +4,6 @@ import { CheckCircleIcon } from '@heroicons/react/24/solid'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import Button from '@/components/shared/Button'
-import ProgressIndicator from '@/components/shared/ProgressIndicator'
 import FAQChatbot from '@/components/shared/FAQChatbot'
 
 /**
@@ -39,15 +38,6 @@ export default function InsuranceResults() {
           </div>
         )}
 
-        {/* Progress Indicator */}
-        <div className="mb-8">
-          <ProgressIndicator
-            currentStep={4}
-            totalSteps={5}
-            percentage={80}
-          />
-        </div>
-
         {/* Success Content */}
         <div className="text-center mb-8">
           {/* Success Icon */}
@@ -59,21 +49,13 @@ export default function InsuranceResults() {
 
           {/* Success Message */}
           <h1 className="text-3xl sm:text-4xl font-heading font-bold text-primary-500 mb-4">
-            Great news! Your insurance is accepted.
+            Insurance Accepted
           </h1>
 
           {/* Next Steps */}
-          <div className="max-w-2xl mx-auto space-y-4 mb-8">
-            <p className="text-base sm:text-lg text-text-body">
-              We&apos;re ready to help you and your child take the next step.
-            </p>
+          <div className="max-w-2xl mx-auto mb-8">
             <p className="text-base text-text-body">
-              Next, we&apos;ll ask you a few questions about your child&apos;s needs.
-              This helps us understand how we can best support your family and match
-              you with the right clinician.
-            </p>
-            <p className="text-base text-text-secondary">
-              All questions are optional, and you can take your time answering them.
+              Your insurance has been verified.
             </p>
           </div>
 
@@ -83,9 +65,9 @@ export default function InsuranceResults() {
               onClick={handleContinue}
               variant="primary"
               size="large"
-              ariaLabel="Continue to intake survey"
+              ariaLabel="Continue"
             >
-              Continue to Survey
+              Continue
             </Button>
           </div>
         </div>
