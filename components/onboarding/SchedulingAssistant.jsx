@@ -169,7 +169,7 @@ export default function SchedulingAssistant() {
   const isLoading = phase === PHASES.INTERPRETING || phase === PHASES.MATCHING
 
   return (
-    <main className="min-h-screen bg-background-cream" role="main">
+    <main className="h-screen bg-background-cream overflow-y-auto" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Show checkmark circle when confirmed, otherwise show normal flow */}
         {isConfirmed ? (

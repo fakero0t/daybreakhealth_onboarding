@@ -8,6 +8,16 @@
 --
 -- Usage:
 --   psql -U <superuser> -d daybreak_health -f migrations/004_create_insurance_tables.sql
+--
+-- NOTE: This script will drop existing tables if they exist, allowing it to be run multiple times.
+
+-- ============================================================================
+-- STEP 0: Drop Existing Objects (if they exist)
+-- ============================================================================
+
+-- Drop tables (CASCADE will drop dependent indexes, constraints, triggers, etc.)
+DROP TABLE IF EXISTS insurance_coverages CASCADE;
+DROP TABLE IF EXISTS clinician_credentialed_insurances CASCADE;
 
 -- ============================================================================
 -- STEP 1: Create clinician_credentialed_insurances Table
@@ -124,22 +134,65 @@ ALTER TABLE clinician_credentialed_insurances ADD CONSTRAINT fk_parent_insurance
 -- STEP 7: Grant Table Permissions
 -- ============================================================================
 
--- Grant permissions to application role
+-- Grant permissions to application role (if it exists)
+DO $$
+BEGIN
+    IF EXISTS (SELECT FROM pg_roles WHERE rolname = 'daybreak_app') THEN
 GRANT SELECT, INSERT, UPDATE, DELETE ON clinician_credentialed_insurances, insurance_coverages TO daybreak_app;
+    END IF;
 
--- Grant read-only permissions
+    -- Grant read-only permissions (if role exists)
+    IF EXISTS (SELECT FROM pg_roles WHERE rolname = 'daybreak_readonly') THEN
 GRANT SELECT ON clinician_credentialed_insurances, insurance_coverages TO daybreak_readonly;
+    END IF;
 
--- Grant all permissions to admin role
+    -- Grant all permissions to admin role (if role exists)
+    IF EXISTS (SELECT FROM pg_roles WHERE rolname = 'daybreak_admin') THEN
 GRANT ALL PRIVILEGES ON clinician_credentialed_insurances, insurance_coverages TO daybreak_admin;
+    END IF;
+END $$;
 
 -- ============================================================================
 -- STEP 8: Record Migration
 -- ============================================================================
 
-INSERT INTO schema_migrations (version, description)
-VALUES ('004_create_insurance_tables', 'Create insurance tables (clinician_credentialed_insurances, insurance_coverages) with indexes, constraints, and self-referential FK')
-ON CONFLICT (version) DO NOTHING;
+-- Create schema_migrations table if it doesn't exist
+CREATE TABLE IF NOT EXISTS schema_migrations (
+    version VARCHAR(255) PRIMARY KEY,
+    applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Add description column if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'schema_migrations' 
+        AND column_name = 'description'
+    ) THEN
+        ALTER TABLE schema_migrations ADD COLUMN description TEXT;
+    END IF;
+END $$;
+
+-- Record this migration (handle both with and without description column)
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'schema_migrations' 
+        AND column_name = 'description'
+    ) THEN
+        INSERT INTO schema_migrations (version, description)
+        VALUES ('004_create_insurance_tables', 'Create insurance tables (clinician_credentialed_insurances, insurance_coverages) with indexes, constraints, and self-referential FK')
+        ON CONFLICT (version) DO NOTHING;
+    ELSE
+        INSERT INTO schema_migrations (version)
+        VALUES ('004_create_insurance_tables')
+        ON CONFLICT (version) DO NOTHING;
+    END IF;
+END $$;
 
 -- ============================================================================
 -- VERIFICATION QUERIES

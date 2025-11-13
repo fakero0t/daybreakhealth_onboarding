@@ -18,7 +18,8 @@ export default function TextInput({
   required = false,
   error = '',
   name = '',
-  disabled = false
+  disabled = false,
+  type = 'text'
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const currentLength = value ? value.length : 0;
@@ -41,7 +42,7 @@ export default function TextInput({
       
       <div className="relative">
         <input
-          type="text"
+          type={type}
           id={name}
           name={name}
           value={value}

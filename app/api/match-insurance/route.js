@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import { matchInsurance, checkInNetworkStatus } from '@/lib/services/insurance-matcher'
+import { matchInsurance } from '@/lib/services/insurance-matcher'
 
 /**
  * POST handler for insurance matching
- * Validates insurance and checks in-network status (no data storage)
+ * Validates insurance (no data storage)
  */
 export async function POST(request) {
   const startTime = Date.now()
@@ -58,7 +58,6 @@ export async function POST(request) {
       return NextResponse.json({
         is_valid_insurance: false,
         matched_insurance: null,
-        is_in_network: false,
         message: 'Unable to validate insurance. You can still proceed.',
         confidence: 'low'
       })
@@ -68,25 +67,12 @@ export async function POST(request) {
     const bestMatch = matchingResult.best_match
     const is_valid_insurance = bestMatch !== null && bestMatch.match_score >= 70
 
-    // Check in-network status if insurance is valid
-    let is_in_network = false
-    if (is_valid_insurance && bestMatch.insurance_id) {
-      try {
-        is_in_network = await checkInNetworkStatus(bestMatch.insurance_id)
-      } catch (error) {
-        console.error('Error checking in-network status:', error)
-        // Continue with is_in_network = false if check fails
-      }
-    }
-
     // Generate message based on validation status
     let message = ''
     if (!is_valid_insurance) {
       message = 'Insurance not recognized. You can still proceed.'
-    } else if (is_in_network) {
-      message = 'Your insurance is accepted by our network'
     } else {
-      message = 'Your insurance is recognized but not currently in our network'
+      message = 'Your insurance is not currently in our network. You may incur out of pocket costs'
     }
 
     // Log metadata (NO PHI)
@@ -94,7 +80,6 @@ export async function POST(request) {
     console.log('Analytics:', {
       event: 'insurance_matching',
       is_valid: is_valid_insurance,
-      is_in_network,
       match_score: bestMatch?.match_score || null,
       match_type: bestMatch?.match_type || null,
       confidence: matchingResult.confidence,
@@ -111,7 +96,6 @@ export async function POST(request) {
         name: bestMatch.insurance_name,
         match_score: bestMatch.match_score
       } : null,
-      is_in_network,
       message,
       confidence: matchingResult.confidence
     })

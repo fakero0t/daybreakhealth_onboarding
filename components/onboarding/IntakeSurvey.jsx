@@ -533,16 +533,16 @@ export default function IntakeSurvey() {
             {/* Progress message */}
             <div className="mb-4 space-y-2">
               <p className="text-lg font-medium text-primary-500">
-                Whew, that was a lot!
+                Thank you for taking the time to answer the questions
               </p>
               <p className="text-base text-text-body">
-                Thanks for spending time on that! This will help us understand and find the best care for your child.
+                This will help us understand and find the best care for your child.
               </p>
             </div>
 
             {/* ARIA live region for screen readers */}
             <div aria-live="polite" aria-atomic="true" className="sr-only">
-              Whew, that was a lot! Thanks for spending time on that! This will help us understand and find the best care for your child.
+              Thank you for taking the time to answer the questions. This will help us understand and find the best care for your child.
             </div>
           </div>
         </div>
@@ -610,13 +610,16 @@ export default function IntakeSurvey() {
   // Intro screen UI
   if (showIntro) {
     return (
-      <main className="min-h-screen bg-background-cream flex items-center justify-center p-4" role="main">
+      <main className="h-screen bg-background-cream flex items-center justify-center p-4 overflow-hidden" role="main">
         <div className="w-full max-w-2xl text-center">
           {/* Intro Screen */}
           <div className="mb-8">
             <h1 className="text-4xl font-heading font-bold text-primary-500 mb-4">
-              Help us understand what your child is experiencing
+              Create a Care Request
             </h1>
+            <p className="text-lg text-text-body">
+              Help us understand what your child is experiencing
+            </p>
           </div>
 
           {/* Next Button */}
@@ -636,7 +639,7 @@ export default function IntakeSurvey() {
   }
 
   return (
-    <main className="min-h-screen bg-background-cream" role="main">
+    <main className="h-screen bg-background-cream overflow-y-auto" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Skip link */}
         <a

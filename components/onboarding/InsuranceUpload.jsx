@@ -121,7 +121,6 @@ export default function InsuranceUpload() {
         // Validation failed but allow user to proceed
         setValidationResults({
           is_valid_insurance: false,
-          is_in_network: false,
           message: 'Unable to validate insurance. You can still proceed.',
           confidence: 'low'
         })
@@ -130,7 +129,6 @@ export default function InsuranceUpload() {
       console.error('Error validating insurance:', error)
       setValidationResults({
         is_valid_insurance: false,
-        is_in_network: false,
         message: 'Unable to validate insurance. You can still proceed.',
         confidence: 'low'
       })
@@ -207,7 +205,7 @@ export default function InsuranceUpload() {
   // If showing review screen
   if (showReview && editableData) {
     return (
-      <main className="min-h-screen bg-background-muted-teal" role="main">
+      <main className="h-screen bg-background-muted-teal overflow-y-auto" role="main">
         <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
           {/* Header */}
           <div className="text-center mb-8">
@@ -363,19 +361,12 @@ export default function InsuranceUpload() {
               {validationResults && !isValidating && (
                 <div className="pt-4 border-t border-neutral-200">
                   <p className={`text-sm font-medium ${
-                    validationResults.is_valid_insurance && validationResults.is_in_network
+                    validationResults.is_valid_insurance
                       ? 'text-success-600'
-                      : validationResults.is_valid_insurance
-                      ? 'text-warning-600'
                       : 'text-text-secondary'
                   }`}>
                     {validationResults.message}
                   </p>
-                  {validationResults.confidence && (
-                    <p className="text-xs text-text-secondary mt-1">
-                      Match Confidence: <span className="font-medium capitalize">{validationResults.confidence}</span>
-                    </p>
-                  )}
                 </div>
               )}
             </div>
@@ -414,7 +405,7 @@ export default function InsuranceUpload() {
 
   // Main upload screen
   return (
-    <main className="min-h-screen bg-background-muted-teal" role="main">
+    <main className="h-screen bg-background-muted-teal overflow-y-auto" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Header */}
         <div className="text-center mb-8">

@@ -40,6 +40,19 @@ export default function Home() {
     }
   }, [isInitialized, currentStep, setCurrentStep])
 
+  // Scroll to top whenever step changes
+  useEffect(() => {
+    if (isInitialized && typeof window !== 'undefined') {
+      // Find the main scrollable container and scroll it to top
+      const mainElement = document.querySelector('main[role="main"]')
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }
+      // Also scroll window as fallback
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+  }, [currentStep, isInitialized])
+
   // Demographics Part 1 completion handler
   const handleDemographicsPart1Complete = useCallback((data) => {
     console.log('Demographics Part 1 completed:', data)

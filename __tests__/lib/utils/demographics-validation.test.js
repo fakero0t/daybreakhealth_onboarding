@@ -48,6 +48,45 @@ describe('validateDemographics', () => {
     expect(errors[0].message).toContain('200 characters');
   });
 
+  test('accepts valid email addresses', () => {
+    const validEmails = [
+      'test@example.com',
+      'user.name@example.co.uk',
+      'user+tag@example.com',
+      'user123@test-domain.com'
+    ];
+    for (const email of validEmails) {
+      const errors = validateDemographics({ email });
+      expect(errors).toHaveLength(0);
+    }
+  });
+
+  test('rejects invalid email addresses', () => {
+    const invalidEmails = [
+      'notanemail',
+      '@example.com',
+      'user@',
+      'user@example',
+      'user space@example.com'
+    ];
+    for (const email of invalidEmails) {
+      const errors = validateDemographics({ email });
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].field).toBe('email');
+      expect(errors[0].message).toContain('valid email');
+    }
+  });
+
+  test('rejects email exceeding 255 characters', () => {
+    const data = {
+      email: 'a'.repeat(250) + '@example.com'
+    };
+    const errors = validateDemographics(data);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0].field).toBe('email');
+    expect(errors[0].message).toContain('255 characters');
+  });
+
   test('rejects text areas exceeding 500 characters', () => {
     const data = {
       fun_activities: 'a'.repeat(600)

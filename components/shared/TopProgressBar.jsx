@@ -3,6 +3,7 @@
 import { useCallback } from 'react'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import ProgressIndicator from '@/components/shared/ProgressIndicator'
+import DaybreakLogo from '@/components/shared/DaybreakLogo'
 import { useOnboardingState } from '@/lib/context/OnboardingContext'
 import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import { clearOnboardingState } from '@/lib/utils/localStorage'
@@ -62,9 +63,7 @@ export default function TopProgressBar({ currentStep }) {
               className="flex items-center focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded-lg px-2 py-1 transition-colors hover:bg-gray-50"
               aria-label="Return to home"
             >
-              <span className="text-xl font-heading font-bold text-primary-500">
-                Daybreak Health
-              </span>
+              <DaybreakLogo size="default" />
             </button>
 
             {/* Back Button */}

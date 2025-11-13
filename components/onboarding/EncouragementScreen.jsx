@@ -21,7 +21,7 @@ export default function EncouragementScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-background-cream" role="main">
+    <main className="h-screen bg-background-cream overflow-y-auto" role="main">
       <div className="container mx-auto px-4 py-16 sm:py-20 max-w-content">
         {/* Main Content */}
         <div className="max-w-2xl mx-auto text-center">

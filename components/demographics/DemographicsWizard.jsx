@@ -258,7 +258,7 @@ export default function DemographicsWizard({
     : ['guardian_information', 'education', 'developmental_history', 'life_changes'];
 
   return (
-    <div className="min-h-screen bg-background-cream flex items-center">
+    <div className="h-screen bg-background-cream overflow-y-auto">
       <div className="max-w-3xl mx-auto px-4 py-8 w-full">
         <ProgressIndicator
           currentStep={currentStep}
@@ -302,17 +302,6 @@ export default function DemographicsWizard({
           isLastStep={currentStep === PAGES.length}
         />
       </div>
-
-        {currentStep === 1 && (
-          <div className="mt-4 text-center">
-            <button
-              onClick={handleSkipAll}
-              className="text-sm text-primary-500 hover:text-primary-600 underline rounded-full px-4 py-2 hover:bg-primary-50 transition-colors"
-            >
-              Skip entire demographics form
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

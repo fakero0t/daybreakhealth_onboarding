@@ -64,6 +64,17 @@ export default function BasicInformationPage({ data, onChange }) {
           helpText="The name you'd like us to call you"
         />
 
+        <TextInput
+          label="Email"
+          name="email"
+          type="email"
+          value={data.email || ''}
+          onChange={(value) => handleFieldChange('email', value)}
+          maxLength={255}
+          placeholder="Enter your email address"
+          helpText="We'll use this to contact you about your appointment"
+        />
+
         <Dropdown
           label="Gender Assigned at Birth"
           name="gender_assigned_at_birth"

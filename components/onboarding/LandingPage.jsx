@@ -4,6 +4,7 @@ import { useStepNavigation } from '@/lib/hooks/useStepNavigation'
 import Button from '@/components/shared/Button'
 import ProgressIndicator from '@/components/shared/ProgressIndicator'
 import FAQChatbot from '@/components/shared/FAQChatbot'
+import DaybreakLogo from '@/components/shared/DaybreakLogo'
 
 /**
  * LandingPage Component
@@ -18,8 +19,13 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background-cream flex items-center justify-center px-4" role="main">
-      <div className="w-full max-w-2xl mx-auto">
+    <main className="h-screen bg-background-cream flex flex-col px-4 overflow-hidden" role="main">
+      {/* Logo in top left */}
+      <div className="absolute top-6 left-6">
+        <DaybreakLogo size="default" />
+      </div>
+      
+      <div className="w-full max-w-2xl mx-auto flex items-center justify-center flex-1">
         {/* No progress indicator on landing page - it's not a step */}
 
         {/* Main Content */}
@@ -62,7 +68,7 @@ export default function LandingPage() {
           
           {/* Company Info */}
           <p className="text-lg text-text-body mb-12 w-full max-w-xl">
-            Mental health support to help every kid and family thrive.
+            We are building a world where every young person benefits from mental health support.
           </p>
 
           {/* CTA Button */}

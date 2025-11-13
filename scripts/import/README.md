@@ -32,7 +32,43 @@ This directory contains SQL scripts for importing CSV data into the Daybreak Hea
 
 ### Running Imports
 
-**Option 1: Run all imports in order**
+**Option 1: SQL Scripts (Local or Server with File Access)**
+
+For local development or when CSV files are accessible on the database server:
+
+```bash
+# Update the CSV path in the script first, then:
+psql -U <username> -d daybreak_health -f scripts/import/import_clinician_credentialed_insurances.sql
+```
+
+**Option 2: Node.js Script (Recommended for Deployed Databases)**
+
+For deployed databases where you can't easily place files on the server, use the Node.js script:
+
+```bash
+# Set environment variables
+export DB_HOST=your-db-host
+export DB_PORT=5432
+export DB_NAME=daybreak_health
+export DB_USER=daybreak_app
+export DB_PASSWORD=your-password
+export DB_SSL=true  # For deployed databases
+
+# Optional: Override CSV path
+export CSV_PATH=/path/to/credentialed_insurances.csv
+
+# Run the import
+node scripts/import/import-clinician-credentialed-insurances.js
+```
+
+The Node.js script:
+- Reads CSV from your local filesystem or any accessible path
+- Connects to the database using environment variables
+- Handles all data transformations automatically
+- Provides progress updates and error reporting
+- Works with both local and deployed databases
+
+**Option 3: Run all imports in order (SQL scripts)**
 ```bash
 cd scripts/import
 for script in $(cat import_order.txt); do
@@ -40,14 +76,7 @@ for script in $(cat import_order.txt); do
 done
 ```
 
-**Option 2: Run individually**
-```bash
-psql -U <username> -d daybreak_health -f scripts/import/import_clinician_credentialed_insurances.sql
-psql -U <username> -d daybreak_health -f scripts/import/import_organizations.sql
-# ... continue with remaining scripts in order
-```
-
-**Option 3: Run interactively in psql**
+**Option 4: Run interactively in psql**
 ```sql
 \c daybreak_health
 \i scripts/import/import_clinician_credentialed_insurances.sql
@@ -57,12 +86,15 @@ psql -U <username> -d daybreak_health -f scripts/import/import_organizations.sql
 
 ## CSV File Paths
 
-All scripts assume CSV files are located in:
-```
-../Daybreak Health Test Cases/
-```
+**SQL Scripts:**
+- Default location: `../Daybreak Health Test Cases/`
+- Update the `COPY` command path in each script to match your environment
+- For deployed databases, upload CSV to server and update path accordingly
 
-If your CSV files are in a different location, update the `COPY` command path in each script.
+**Node.js Scripts:**
+- Default location: `Daybreak Health Test Cases/` (relative to project root)
+- Override with `CSV_PATH` environment variable
+- Works with any accessible file path (local or remote)
 
 ## Data Transformations
 
